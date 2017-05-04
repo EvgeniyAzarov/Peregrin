@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical" android:layout_width="match_parent"
+<<<<<<< HEAD
     android:layout_height="match_parent"
     android:paddingTop="16dp"
     android:paddingBottom="16dp"
@@ -36,4 +37,21 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 
+=======
+    android:layout_height="match_parent">
+
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:inputType="textPersonName"
+        android:ems="10"
+        android:id="@+id/editText"
+        android:hint="Добавить контакт"/>
+
+
+    <ListView
+        android:id="@+id/lvMain"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+>>>>>>> 0107c19981e97769e8be8ad083160f86aa2362ee
 </LinearLayout>
