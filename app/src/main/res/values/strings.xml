@@ -3,4 +3,5 @@
     <string name="add_contact">Добавить контакт</string>
     <string name="registeration">Registeration</string>
     <string name="enter">Enter</string>
+    <string name="wrong_password">Неправильный пароль или имя пользователя</string>
 </resources>
