@@ -1,24 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.peregrin.activities.SwitchActivity">
-
-    <Button
-        android:id="@+id/btEnter"
-        android:layout_width="163dp"
-        android:layout_height="49dp"
-        android:text="@string/enter"
-        tools:layout_editor_absoluteY="123dp"
-        tools:layout_editor_absoluteX="108dp" />
+    android:foregroundGravity="bottom"
+    android:gravity="bottom"
+    android:orientation="vertical">
 
     <Button
         android:id="@+id/btRegister"
-        android:layout_width="163dp"
-        android:layout_height="49dp"
-        android:text="@string/registeration"
-        tools:layout_editor_absoluteX="112dp"
-        tools:layout_editor_absoluteY="277dp" />
-</android.support.constraint.ConstraintLayout>
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="10dp"
+        android:layout_marginEnd="20dp"
+        android:layout_marginStart="20dp"
+        android:text="Регистрация" />
+
+    <Button
+        android:id="@+id/btEnter"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="60dp"
+        android:layout_marginEnd="20dp"
+        android:layout_marginStart="20dp"
+        android:foregroundGravity="bottom"
+        android:text="Вход" />
+</LinearLayout>

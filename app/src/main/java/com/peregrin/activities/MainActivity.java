@@ -51,7 +51,7 @@ public class MainActivity extends Activity {
 
 
     public void addContact(View view) {
-        names.add(((EditText)findViewById(R.id.etAddContact)).getText().toString());
+        names.add(((EditText)findViewById(R.id.etContactName)).getText().toString());
         adapter.notifyDataSetChanged();
     }
 

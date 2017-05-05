@@ -15,10 +15,10 @@ public class SwitchActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_switch);
 
-        Button ENbt = ((Button) findViewById(R.id.btEnter));
-        Button RGbt = ((Button) findViewById(R.id.btEnter));
+        Button enterButton = ((Button) findViewById(R.id.btEnter));
+        Button registerButton = ((Button) findViewById(R.id.btRegister));
 
-        ENbt.setOnClickListener(new View.OnClickListener(){
+        enterButton.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(SwitchActivity.this, EnterActivity.class);
@@ -26,7 +26,7 @@ public class SwitchActivity extends Activity {
             }
         });
 
-        RGbt.setOnClickListener(new View.OnClickListener(){
+        registerButton.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(SwitchActivity.this, RegisterActivity.class);
