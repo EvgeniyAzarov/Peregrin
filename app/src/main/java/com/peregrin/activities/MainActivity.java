@@ -3,7 +3,9 @@ package com.peregrin.activities;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ListView;
@@ -11,6 +13,8 @@ import android.widget.ListView;
 import com.peregrin.R;
 
 import java.util.ArrayList;
+
+import static com.peregrin.R.id.contactsList;
 
 
 public class MainActivity extends Activity {
@@ -34,6 +38,15 @@ public class MainActivity extends Activity {
                 android.R.layout.simple_list_item_1, names);
 
         contactsList.setAdapter(adapter);
+
+        contactsList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            public void onItemClick(AdapterView<?> parent, View view,
+                                    int position, long id) {
+                Log.d("null", "itemClick: position = " + position + ", id = "
+                        + id);
+            }
+        });
+
     }
 
 
