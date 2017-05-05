@@ -24,14 +24,11 @@ public class MessageEntryAdapter extends ArrayAdapter<String> {
         final LayoutInflater inflater =
                 (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         final View entryView = inflater.inflate(R.layout.message_layout, parent, false);
-        final TextView entryName = (TextView) entryView.findViewById(R.id.tvName);
         final TextView entryMessage = (TextView) entryView.findViewById(R.id.tvMessage);
 
         final String fullMessage = getItem(position);
         if (fullMessage != null) {
             final int endOfName = fullMessage.indexOf(":") + 1;
-
-            entryName.setText(fullMessage.substring(0, endOfName) + " ");
 
             entryMessage.setText(fullMessage.substring(endOfName, fullMessage.length()));
         }
