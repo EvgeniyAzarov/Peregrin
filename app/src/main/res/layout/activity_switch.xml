@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.peregrin.activities.SwitchActivity">
+
+    <Button
+        android:id="@+id/btEnter"
+        android:layout_width="163dp"
+        android:layout_height="49dp"
+        android:text="@string/enter"
+        tools:layout_editor_absoluteY="123dp"
+        tools:layout_editor_absoluteX="108dp" />
+
+    <Button
+        android:id="@+id/btRegister"
+        android:layout_width="163dp"
+        android:layout_height="49dp"
+        android:text="@string/registeration"
+        tools:layout_editor_absoluteX="112dp"
+        tools:layout_editor_absoluteY="277dp" />
+</android.support.constraint.ConstraintLayout>
