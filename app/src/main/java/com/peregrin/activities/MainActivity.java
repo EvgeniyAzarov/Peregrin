@@ -3,13 +3,20 @@ package com.peregrin.activities;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.ArrayAdapter;
+import android.widget.EditText;
 import android.widget.ListView;
 
 import com.peregrin.R;
 
+import java.util.ArrayList;
+
 
 public class MainActivity extends Activity {
+
+    private ArrayList<String> names = new ArrayList<>();
+    ArrayAdapter<String> adapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -21,15 +28,18 @@ public class MainActivity extends Activity {
             MainActivity.this.startActivity(intent);
         }
 
-        String[] names = {"Иван", "Марья", "Петр", "Антон", "Даша", "Борис",
-                "Костя", "Игорь", "Анна", "Денис", "Андрей"};
+        ListView contactsList = (ListView) findViewById(R.id.contactsList);
 
-        ListView lvMain = (ListView) findViewById(R.id.lvMain);
-
-        ArrayAdapter<String> adapter = new ArrayAdapter<>(this,
+        adapter = new ArrayAdapter<>(this,
                 android.R.layout.simple_list_item_1, names);
 
-        lvMain.setAdapter(adapter);
+        contactsList.setAdapter(adapter);
+    }
+
+
+    public void addContact(View view) {
+        names.add(((EditText)findViewById(R.id.etAddContact)).getText().toString());
+        adapter.notifyDataSetChanged();
     }
 
     boolean userRegister(){
