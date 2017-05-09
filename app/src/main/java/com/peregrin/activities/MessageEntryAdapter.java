@@ -15,7 +15,7 @@ import java.util.ArrayList;
 
 public class MessageEntryAdapter extends ArrayAdapter<String> {
     public MessageEntryAdapter(Context context, ArrayList<String> strings) {
-        super(context, R.layout.message_layout, strings);
+        super(context, R.layout.user_message, strings);
     }
 
     @NonNull
@@ -23,7 +23,7 @@ public class MessageEntryAdapter extends ArrayAdapter<String> {
     public View getView(int position, View convertView, @NonNull ViewGroup parent) {
         final LayoutInflater inflater =
                 (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        final View entryView = inflater.inflate(R.layout.message_layout, parent, false);
+        final View entryView = inflater.inflate(R.layout.user_message, parent, false);
         final TextView entryMessage = (TextView) entryView.findViewById(R.id.tvMessage);
 
         final String fullMessage = getItem(position);

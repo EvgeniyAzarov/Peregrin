@@ -21,18 +21,17 @@ public class SwitchActivity extends Activity {
         enterButton.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(SwitchActivity.this, EnterActivity.class);
-                SwitchActivity.this.startActivity(intent);
+                SwitchActivity.this.startActivity(new Intent(
+                        SwitchActivity.this, EnterActivity.class));
             }
         });
 
         registerButton.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(SwitchActivity.this, RegisterActivity.class);
-                SwitchActivity.this.startActivity(intent);
+                SwitchActivity.this.startActivity(new Intent(
+                        SwitchActivity.this, RegisterActivity.class));
             }
         });
     }
-
 }

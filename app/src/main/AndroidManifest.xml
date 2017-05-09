@@ -19,7 +19,9 @@
         <activity android:name=".activities.ChatActivity" />
         <activity android:name=".activities.SwitchActivity" />
         <activity android:name=".activities.EnterActivity" />
-        <activity android:name=".activities.RegisterActivity"></activity>
+        <activity android:name=".activities.RegisterActivity" />
     </application>
+
+    <uses-permission android:name="android.permission.INTERNET" />
 
 </manifest>
