@@ -15,7 +15,7 @@ android:orientation="vertical">
         android:layout_marginLeft="20dp"
         android:layout_marginRight="20dp"
         android:layout_marginTop="20dp"
-        android:text="Вы не авторизовались. Пожалуйста, зарегестрируйтесь или войдите в свой аккаунт, что бы использовать все функции приложения."
+        android:text="@string/you_are_not_authorisation"
         android:textSize="18sp" />
 
     <LinearLayout

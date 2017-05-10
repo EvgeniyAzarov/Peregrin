@@ -102,7 +102,7 @@ public class EnterActivity extends AppCompatActivity {
                                     .show();
 
                         } else {
-                            Editor editor = getPreferences(MODE_PRIVATE).edit();
+                            Editor editor = getSharedPreferences("user", MODE_PRIVATE).edit();
                             editor.putString("phone", phone);
                             editor.putString("nickname", nickname);
                             editor.apply();

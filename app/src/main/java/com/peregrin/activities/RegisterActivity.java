@@ -123,7 +123,7 @@ public class RegisterActivity extends AppCompatActivity {
                                         .show();
 
                             } else {
-                                SharedPreferences.Editor editor = getPreferences(MODE_PRIVATE).edit();
+                                SharedPreferences.Editor editor = getSharedPreferences("user", MODE_PRIVATE).edit();
                                 editor.putString("phone", phone);
                                 editor.putString("nickname", nickname);
                                 editor.apply();
