@@ -5,6 +5,9 @@
     android:foregroundGravity="bottom"
     android:orientation="vertical">
 
+    <include android:id="@+id/toolbar"
+        layout="@layout/toolbar" />
+
     <EditText
         android:id="@+id/phone_number"
         android:layout_width="match_parent"

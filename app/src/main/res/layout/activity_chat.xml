@@ -6,6 +6,9 @@
     android:layout_height="match_parent"
     tools:context="com.peregrin.activities.ChatActivity">
 
+    <include android:id="@+id/toolbar"
+        layout="@layout/toolbar" />
+
     <LinearLayout
         android:orientation="vertical"
         android:layout_width="368dp"
