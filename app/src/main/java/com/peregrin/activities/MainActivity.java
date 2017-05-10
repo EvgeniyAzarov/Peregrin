@@ -26,27 +26,6 @@ public class MainActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
-        if(userRegister() == false){
-            Intent intent = new Intent(MainActivity.this, SwitchActivity.class);
-            MainActivity.this.startActivity(intent);
-        }
-
-        ListView contactsList = (ListView) findViewById(R.id.contactsList);
-
-        adapter = new ArrayAdapter<>(this,
-                android.R.layout.simple_list_item_1, names);
-
-        contactsList.setAdapter(adapter);
-
-        contactsList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            public void onItemClick(AdapterView<?> parent, View view,
-                                    int position, long id) {
-                Log.d("null", "itemClick: position = " + position + ", id = "
-                        + id);
-            }
-        });
-
     }
 
 
