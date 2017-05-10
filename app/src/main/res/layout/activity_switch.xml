@@ -3,8 +3,10 @@
 android:layout_width="match_parent"
 android:layout_height="match_parent"
 android:foregroundGravity="bottom"
-android:gravity="bottom"
 android:orientation="vertical">
+
+    <include android:id="@+id/toolbar"
+        layout="@layout/toolbar" />
 
 <Button
     android:id="@+id/btRegister"

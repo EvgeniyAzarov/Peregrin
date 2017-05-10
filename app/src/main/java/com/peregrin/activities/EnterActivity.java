@@ -6,6 +6,8 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -24,7 +26,7 @@ import es.dmoral.toasty.Toasty;
 
 import static android.content.SharedPreferences.*;
 
-public class EnterActivity extends Activity {
+public class EnterActivity extends AppCompatActivity {
     EditText user_phone;
     EditText user_password;
     Button bt;
@@ -33,6 +35,11 @@ public class EnterActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_enter);
+
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+
+        toolbar.setLogo(R.mipmap.ic_launcher);
 
         user_phone = (EditText) findViewById(R.id.enter_phone);
         user_password = (EditText) findViewById(R.id.enter_password);

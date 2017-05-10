@@ -6,6 +6,8 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.telephony.PhoneNumberUtils;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -25,12 +27,17 @@ import java.util.Locale;
 
 import es.dmoral.toasty.Toasty;
 
-public class RegisterActivity extends Activity {
+public class RegisterActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
+
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+
+        toolbar.setLogo(R.mipmap.ic_launcher);
 
 
         ((EditText) findViewById(R.id.phone_number)).addTextChangedListener(new TextWatcher() {
