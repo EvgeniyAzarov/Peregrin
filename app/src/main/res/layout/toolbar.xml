@@ -1,8 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.v7.widget.Toolbar
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.v7.widget.Toolbar xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_height="wrap_content"
     android:layout_width="match_parent"
+    xmlns:android.support.v7.appcompat="http://schemas.android.com/apk/res-auto"
     android:minHeight="?android:attr/actionBarSize"
     android:background="?attr/colorPrimary"
-    />
+    android.support.v7.appcompat:logo="@mipmap/ic_toolbar"
+    android.support.v7.appcompat:title="@string/app_name"
+    android.support.v7.appcompat:titleTextColor="@android:color/white" />

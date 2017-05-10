@@ -37,8 +37,6 @@ public class RegisterActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        toolbar.setLogo(R.mipmap.ic_launcher);
-
 
         ((EditText) findViewById(R.id.phone_number)).addTextChangedListener(new TextWatcher() {
             @Override

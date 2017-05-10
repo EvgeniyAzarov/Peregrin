@@ -9,7 +9,6 @@ import android.view.Menu;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.EditText;
 import android.widget.ListView;
 
 import com.peregrin.R;
@@ -28,10 +27,9 @@ public class MainActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        toolbar.setLogo(R.mipmap.ic_launcher);
-
         if (getPreferences(MODE_PRIVATE).getString("phone", "").equals("")) {
             this.startActivity(new Intent(MainActivity.this, SwitchActivity.class));
+            this.finish();
         }
     }
 
@@ -60,11 +58,5 @@ public class MainActivity extends AppCompatActivity {
     public boolean onCreateOptionsMenu(Menu menu){
         getMenuInflater().inflate(R.menu.menu_main, menu);
         return true;
-    }
-
-
-    public void addContact(View view) {
-        names.add(((EditText) findViewById(R.id.etContactName)).getText().toString());
-        adapter.notifyDataSetChanged();
     }
 }

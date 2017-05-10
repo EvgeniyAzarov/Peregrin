@@ -20,8 +20,6 @@ public class SwitchActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        toolbar.setLogo(R.mipmap.ic_launcher);
-
         Button enterButton = ((Button) findViewById(R.id.btEnter));
         Button registerButton = ((Button) findViewById(R.id.btRegister));
 

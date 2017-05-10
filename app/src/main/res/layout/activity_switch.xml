@@ -8,22 +8,42 @@ android:orientation="vertical">
     <include android:id="@+id/toolbar"
         layout="@layout/toolbar" />
 
-<Button
-    android:id="@+id/btRegister"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:layout_marginBottom="10dp"
-    android:layout_marginEnd="20dp"
-    android:layout_marginStart="20dp"
-    android:text="@string/registration" />
+    <TextView
+        android:id="@+id/textView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:layout_marginTop="20dp"
+        android:text="Вы не авторизовались. Пожалуйста, зарегестрируйтесь или войдите в свой аккаунт, что бы использовать все функции приложения."
+        android:textSize="18sp" />
 
-<Button
-    android:id="@+id/btEnter"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:layout_marginBottom="60dp"
-    android:layout_marginEnd="20dp"
-    android:layout_marginStart="20dp"
-    android:foregroundGravity="bottom"
-    android:text="@string/enter" />
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="bottom"
+        android:orientation="vertical">
+
+        <Button
+            android:id="@+id/btRegister"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp"
+            android:layout_marginEnd="20dp"
+            android:layout_marginStart="20dp"
+            android:foregroundGravity="bottom"
+            android:text="@string/registration" />
+
+        <Button
+            android:id="@+id/btEnter"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom"
+            android:layout_marginBottom="60dp"
+            android:layout_marginEnd="20dp"
+            android:layout_marginStart="20dp"
+            android:text="@string/enter" />
+
+    </LinearLayout>
+
 </LinearLayout>

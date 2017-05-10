@@ -20,8 +20,6 @@ public class ChatActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        toolbar.setLogo(R.mipmap.ic_launcher);
-
         InterlocutorLogin = getIntent().getStringExtra("Interlocutor login");
     }
 

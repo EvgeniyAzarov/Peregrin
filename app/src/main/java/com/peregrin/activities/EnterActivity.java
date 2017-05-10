@@ -36,7 +36,6 @@ public class EnterActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        toolbar.setLogo(R.mipmap.ic_launcher);
 
         user_phone = (EditText) findViewById(R.id.enter_phone);
         user_password = (EditText) findViewById(R.id.enter_password);
