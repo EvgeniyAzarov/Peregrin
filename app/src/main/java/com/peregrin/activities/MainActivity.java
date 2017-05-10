@@ -14,6 +14,8 @@ import com.peregrin.R;
 
 import java.util.ArrayList;
 
+import es.dmoral.toasty.Toasty;
+
 
 public class MainActivity extends Activity {
 
@@ -21,14 +23,18 @@ public class MainActivity extends Activity {
     ArrayAdapter<String> adapter;
 
     @Override
+    protected void onStart() {
+        super.onStart();
+
+        if (getPreferences(MODE_PRIVATE).getString("phone", "").equals("")) {
+            this.startActivity(new Intent(MainActivity.this, SwitchActivity.class));
+        }
+    }
+
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
-        if (getPreferences(MODE_PRIVATE).getString("phone", "").equals("")) {
-            startActivity(new Intent(MainActivity.this, SwitchActivity.class));
-            finish();
-        }
 
         ListView contactsList = (ListView) findViewById(R.id.contactsList);
 
@@ -40,16 +46,9 @@ public class MainActivity extends Activity {
         contactsList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             public void onItemClick(AdapterView<?> parent, View view,
                                     int position, long id) {
-                Log.d("null", "itemClick: position = " + position + ", id = "
-                        + id);
+                Log.d("null", "itemClick: position = " + position + ", id = " + id);
             }
         });
 
-    }
-
-
-    public void addContact(View view) {
-        names.add(((EditText) findViewById(R.id.etContactName)).getText().toString());
-        adapter.notifyDataSetChanged();
     }
 }

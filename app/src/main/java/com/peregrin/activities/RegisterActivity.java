@@ -98,7 +98,6 @@ public class RegisterActivity extends Activity {
 
                                 registrationSuccessful = inputStream.readBoolean();
                             } catch (IOException e) {
-                                Log.e("Peregrin", e.getMessage());
                                 networkError = true;
                             }
 
