@@ -15,6 +15,8 @@ import com.peregrin.R;
 
 import java.util.ArrayList;
 
+import es.dmoral.toasty.Toasty;
+
 public class MainActivity extends AppCompatActivity {
 
     private ArrayList<String> names = new ArrayList<>();
@@ -27,7 +29,7 @@ public class MainActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        if (getPreferences(MODE_PRIVATE).getString("phone", "").equals("")) {
+        if (getSharedPreferences("user",MODE_PRIVATE).getString("phone", "").equals("")) {
             this.startActivity(new Intent(MainActivity.this, SwitchActivity.class));
             this.finish();
         }

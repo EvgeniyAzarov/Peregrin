@@ -12,4 +12,5 @@
     <string name="repeat_password">Accept password</string>
     <string name="register">Register</string>
     <string name="wrong_password">Wrong password or login</string>
+    <string name="you_are_not_authorisation">You are not authorisation. Please, register or enter to your accaunt to use all application functional.</string>
 </resources>
