@@ -1,37 +1,39 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_gravity="center"
+    android:orientation="vertical">
 
 
     <EditText
         android:id="@+id/enter_phone"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:ems="10"
-        android:inputType="phone"
         android:layout_marginBottom="30dp"
         android:layout_marginEnd="20dp"
         android:layout_marginStart="20dp"
-        android:hint="Введите номер телефона"/>
+        android:ems="10"
+        android:hint="Введите номер телефона"
+        android:inputType="phone" />
 
     <EditText
         android:id="@+id/enter_password"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:ems="10"
-        android:inputType="textPersonName"
         android:layout_marginBottom="30dp"
         android:layout_marginEnd="20dp"
         android:layout_marginStart="20dp"
-        android:hint="Введите пароль"/>
+        android:ems="10"
+        android:hint="Введите пароль"
+        android:inputType="textPersonName" />
 
     <Button
         android:id="@+id/enter_bt"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Войти"
         android:layout_marginBottom="30dp"
         android:layout_marginEnd="20dp"
-        android:layout_marginStart="20dp"/>
+        android:layout_marginStart="20dp"
+        android:text="Войти" />
 </LinearLayout>
