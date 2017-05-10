@@ -3,6 +3,7 @@ package com.peregrin.activities;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.telephony.PhoneNumberUtils;
@@ -118,6 +119,11 @@ public class RegisterActivity extends Activity {
                                         .show();
 
                             } else {
+                                SharedPreferences.Editor editor = getPreferences(MODE_PRIVATE).edit();
+                                editor.putString("phone", phone);
+                                editor.putString("nickname", nickname);
+                                editor.apply();
+
                                 startActivity(new Intent(RegisterActivity.this, MainActivity.class));
                             }
                         }

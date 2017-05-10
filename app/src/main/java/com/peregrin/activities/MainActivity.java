@@ -14,8 +14,6 @@ import com.peregrin.R;
 
 import java.util.ArrayList;
 
-import static com.peregrin.R.id.contactsList;
-
 
 public class MainActivity extends Activity {
 
@@ -27,9 +25,9 @@ public class MainActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        if(userRegister() == false){
-            Intent intent = new Intent(MainActivity.this, SwitchActivity.class);
-            MainActivity.this.startActivity(intent);
+        if (getPreferences(MODE_PRIVATE).getString("phone", "").equals("")) {
+            startActivity(new Intent(MainActivity.this, SwitchActivity.class));
+            finish();
         }
 
         ListView contactsList = (ListView) findViewById(R.id.contactsList);
@@ -51,11 +49,7 @@ public class MainActivity extends Activity {
 
 
     public void addContact(View view) {
-        names.add(((EditText)findViewById(R.id.etContactName)).getText().toString());
+        names.add(((EditText) findViewById(R.id.etContactName)).getText().toString());
         adapter.notifyDataSetChanged();
-    }
-
-    boolean userRegister(){
-        return false;
     }
 }

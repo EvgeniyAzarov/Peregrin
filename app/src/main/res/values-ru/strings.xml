@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="add_contact">Добавить контакт</string>
+    <string name="enter">Вход</string>
+    <string name="network_error">Ошибка доступа к сети</string>
+    <string name="nickname">Имя</string>
+    <string name="password">Пароль</string>
+    <string name="passwords_are_not_equals">Пароли не совпадают!</string>
+    <string name="phone_number">Номер телефона</string>
+    <string name="register">Зарегистрироваться</string>
+    <string name="registration">Регистрация</string>
+    <string name="repeat_password">Повторите пароль</string>
+    <string name="user_with_this_phone_was_registered">Пользователь с таким номером телефона уже зарегестрирован!</string>
+    <string name="wrong_password">Неверный телефон или пароль</string>
+</resources>
