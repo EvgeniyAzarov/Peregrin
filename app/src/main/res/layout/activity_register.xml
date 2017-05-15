@@ -23,7 +23,7 @@
             android:layout_marginTop="50dp"
             android:ems="10"
             android:hint="@string/phone_number"
-            android:inputType="phone" />
+            android:inputType="number" />
 
         <EditText
             android:id="@+id/nickname"

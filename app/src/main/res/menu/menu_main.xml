@@ -5,24 +5,18 @@
     <item
         android:id="@+id/action_settings"
         android:orderInCategory="100"
-        android:title="1"
+        android:title="@string/settings"
         app:showAsAction="never"/>
 
     <item
-        android:id="@+id/action_cat1"
+        android:id="@+id/action_about"
         android:orderInCategory="100"
-        android:title="2"
+        android:title="@string/about"
         app:showAsAction="never"/>
 
     <item
-        android:id="@+id/action_cat2"
+        android:id="@+id/action_log_out"
         android:orderInCategory="100"
-        android:title="3"
-        app:showAsAction="never"/>
-
-    <item
-        android:id="@+id/action_cat3"
-        android:orderInCategory="100"
-        android:title="4"
+        android:title="@string/log_out"
         app:showAsAction="never"/>
 </menu>

@@ -6,16 +6,13 @@ import android.database.sqlite.SQLiteOpenHelper;
 
 
 public class DBHelper extends SQLiteOpenHelper {
-
     public DBHelper(Context context) {
-        super(context, "peregrin", null, 1);
+        super(context, "peregrin", null, 0);
     }
 
     @Override
     public void onCreate(SQLiteDatabase db) {
-        db.execSQL("create table messages ("
-                + "sender_login text,"
-                + "content text" + ");");
+
     }
 
     @Override

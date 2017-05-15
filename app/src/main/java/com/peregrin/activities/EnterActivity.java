@@ -32,9 +32,7 @@ public class EnterActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_enter);
-
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
+        setSupportActionBar((Toolbar) findViewById(R.id.toolbar));
 
 
         user_phone = (EditText) findViewById(R.id.enter_phone);
@@ -107,7 +105,9 @@ public class EnterActivity extends AppCompatActivity {
                             editor.putString("nickname", nickname);
                             editor.apply();
 
-                            startActivity(new Intent(EnterActivity.this, MainActivity.class));
+                            startActivity(new Intent(EnterActivity.this, MainActivity.class)
+                                    .setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK)
+                            );
                         }
                     }
                 }.execute();

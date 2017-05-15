@@ -7,32 +7,46 @@
     <include android:id="@+id/toolbar"
         layout="@layout/toolbar" />
 
-    <LinearLayout
+    <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal">
+        android:layout_height="match_parent">
 
-        <EditText
-            android:id="@+id/etContactName"
+        <ListView
+            android:id="@+id/contactsList"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
+        <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="7"
-            android:ems="10"
-            android:hint="Добавить контакт"
-            android:onClick="addContact"
-            android:inputType="textPersonName" />
+            android:layout_gravity="bottom|end"
+            android:orientation="horizontal">
 
-        <Button
-            android:id="@+id/button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="+"
-            android:textSize="18sp" />
-    </LinearLayout>
+            <EditText
+                android:id="@+id/etNewChat"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:ems="10"
+                android:inputType="number"
+                android:textSize="18sp"
+                android:visibility="gone"
+                android:hint="@string/interlocutor_phone"/>
 
-    <ListView
-        android:id="@+id/contactsList"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+            <Button
+                android:id="@+id/btNewChat"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:layout_marginBottom="20dp"
+                android:layout_marginEnd="20dp"
+                android:layout_weight="1"
+                android:background="@drawable/button_new_chat_background"
+                android:gravity="center"
+                android:text="+"
+                android:textColor="@android:color/white"
+                android:textSize="24sp" />
+        </LinearLayout>
+
+    </FrameLayout>
+
 </LinearLayout>

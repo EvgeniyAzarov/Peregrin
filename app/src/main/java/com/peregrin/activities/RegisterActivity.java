@@ -1,6 +1,5 @@
 package com.peregrin.activities;
 
-import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -8,10 +7,6 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.telephony.PhoneNumberUtils;
-import android.text.Editable;
-import android.text.TextWatcher;
-import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
@@ -23,7 +18,6 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
-import java.util.Locale;
 
 import es.dmoral.toasty.Toasty;
 
@@ -33,29 +27,9 @@ public class RegisterActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
+        setSupportActionBar((Toolbar) findViewById(R.id.toolbar));
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
-
-
-        ((EditText) findViewById(R.id.phone_number)).addTextChangedListener(new TextWatcher() {
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-                // nothing to do here..
-            }
-
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-                // nothing to do here..
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {
-                // TODO format input number
-            }
-        });
-
-        findViewById(R.id.bt).setOnClickListener(new View.OnClickListener(){
+        findViewById(R.id.bt).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
@@ -68,9 +42,13 @@ public class RegisterActivity extends AppCompatActivity {
                 final String password = ((EditText) findViewById(R.id.password)).getText().toString();
                 final String password_accept = ((EditText) findViewById(R.id.password_accept)).getText().toString();
 
-                if (nickname.equals("")) {
-
-                } else if(!password.equals(password_accept)){
+                if (nickname.equals("") || phone.equals("")) {
+                    Toasty.warning(RegisterActivity.this, getString(R.string.fill_in_all_fields)).show();
+                } else if (phone.length() != 10) {
+                    Toasty.warning(RegisterActivity.this, getString(R.string.incorrect_phone_number)).show();
+                } else if (password.length() < 6) {
+                    Toasty.warning(RegisterActivity.this, getString(R.string.too_short_password)).show();
+                } else if (!password.equals(password_accept)) {
                     Toasty.warning(RegisterActivity.this, getString(R.string.passwords_are_not_equals)).show();
                 } else {
                     new AsyncTask<Void, Void, Void>() {
@@ -128,7 +106,9 @@ public class RegisterActivity extends AppCompatActivity {
                                 editor.putString("nickname", nickname);
                                 editor.apply();
 
-                                startActivity(new Intent(RegisterActivity.this, MainActivity.class));
+                                startActivity(new Intent(RegisterActivity.this, MainActivity.class)
+                                        .setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK)
+                                );
                             }
                         }
                     }.execute();

@@ -23,7 +23,7 @@
             android:layout_marginStart="20dp"
             android:ems="10"
             android:hint="Введите номер телефона"
-            android:inputType="phone" />
+            android:inputType="number" />
 
         <EditText
             android:id="@+id/enter_password"
