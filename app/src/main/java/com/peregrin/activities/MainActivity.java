@@ -115,7 +115,7 @@ public class MainActivity extends AppCompatActivity {
                             if (networkError) {
                                 Toasty.error(MainActivity.this, getString(R.string.network_error)).show();
                             } else if (!loginCorrect) {
-                                Toasty.warning(MainActivity.this, getString(R.string.not_dound_user_with_this_phone)).show();
+                                Toasty.warning(MainActivity.this, getString(R.string.not_found_user_with_this_phone)).show();
                             } else {
                                 etNewChat.setText("");
                                 etNewChat.setVisibility(View.GONE);
