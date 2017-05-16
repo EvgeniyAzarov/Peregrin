@@ -8,4 +8,4 @@
     android.support.v7.appcompat:logo="@mipmap/ic_toolbar"
     android.support.v7.appcompat:title="@string/app_name"
     android.support.v7.appcompat:titleTextColor="@android:color/white"
-    android.support.v7.appcompat:titleMarginStart="20dp"/>
+    android.support.v7.appcompat:titleMarginStart="20dp" />

@@ -7,12 +7,15 @@ import android.database.sqlite.SQLiteOpenHelper;
 
 public class DBHelper extends SQLiteOpenHelper {
     public DBHelper(Context context) {
-        super(context, "peregrin", null, 0);
+        super(context, "peregrin", null, 1);
     }
 
     @Override
     public void onCreate(SQLiteDatabase db) {
-
+        db.execSQL("create table chats_list ("
+                + "interlocutor_login text,"
+                + "interlocutor_nickname text,"
+                + "last_message text" + ");");
     }
 
     @Override

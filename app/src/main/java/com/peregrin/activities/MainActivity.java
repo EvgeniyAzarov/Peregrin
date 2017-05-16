@@ -1,6 +1,9 @@
 package com.peregrin.activities;
 
+import android.content.ContentValues;
 import android.content.Intent;
+import android.database.sqlite.SQLiteDatabase;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -16,8 +19,14 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
 
+import com.peregrin.DBHelper;
 import com.peregrin.R;
+import com.peregrin.ServerInfo;
 
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.net.Socket;
 import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
@@ -53,7 +62,53 @@ public class MainActivity extends AppCompatActivity {
                     btNewChat.setText("+");
                     btNewChat.setOnClickListener(buttonNormal);
                 } else {
-                    // TODO start new chat
+                    new AsyncTask<Void, Void, Void>() {
+                        private String interlocutor_login;
+                        private boolean networkError;
+                        private boolean loginCorrect;
+
+                        @Override
+                        protected void onPreExecute() {
+                            interlocutor_login = etNewChat.getText().toString();
+                        }
+
+                        @Override
+                        protected Void doInBackground(Void... params) {
+                            try (
+                                    Socket socket = new Socket(ServerInfo.ADDRESS, ServerInfo.PORT);
+                                    ObjectOutputStream outputStream = new ObjectOutputStream(socket.getOutputStream());
+                                    ObjectInputStream inputStream = new ObjectInputStream(socket.getInputStream())
+                            ) {
+                                String[] request = new String[3];
+                                request[0] = "FIND_USER";
+                                request[1] = interlocutor_login;
+
+                                outputStream.writeObject(request);
+
+                                loginCorrect = inputStream.readBoolean();
+
+                                if (loginCorrect) {
+                                    String interlocutor_nickname = (String) inputStream.readObject();
+
+                                    DBHelper dbHelper = new DBHelper(MainActivity.this);
+                                    SQLiteDatabase database = dbHelper.getWritableDatabase();
+
+                                    ContentValues cv = new ContentValues();
+                                    cv.put("interlocutor_login", interlocutor_login);
+                                    cv.put("interlocutor_nickname", interlocutor_nickname);
+
+                                    database.insert("chats_list", null, cv);
+                                }
+                            } catch (IOException e) {
+                                networkError = true;
+                            } catch (ClassNotFoundException e) {
+                                e.printStackTrace();
+                            }
+
+                            return null;
+                        }
+
+                    }.execute();
                 }
             }
         };
