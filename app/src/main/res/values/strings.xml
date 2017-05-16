@@ -19,4 +19,5 @@
     <string name="too_short_password">Your password is too short</string>
     <string name="incorrect_phone_number">Incorrect phone number</string>
     <string name="fill_in_all_fields">Fill in all fields</string>
+    <string name="not_dound_user_with_this_phone">User with this phone is not registered</string>
 </resources>

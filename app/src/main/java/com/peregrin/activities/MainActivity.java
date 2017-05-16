@@ -29,9 +29,11 @@ import java.io.ObjectOutputStream;
 import java.net.Socket;
 import java.util.ArrayList;
 
+import es.dmoral.toasty.Toasty;
+
 public class MainActivity extends AppCompatActivity {
 
-    private ArrayList<String> names = new ArrayList<>();
+    private ArrayList<String> chats = new ArrayList<>();
     ArrayAdapter<String> adapter;
 
     private Button btNewChat;
@@ -98,16 +100,29 @@ public class MainActivity extends AppCompatActivity {
                                     cv.put("interlocutor_nickname", interlocutor_nickname);
 
                                     database.insert("chats_list", null, cv);
+
+                                    dbHelper.close();
                                 }
-                            } catch (IOException e) {
+                            } catch (IOException | ClassNotFoundException e) {
                                 networkError = true;
-                            } catch (ClassNotFoundException e) {
-                                e.printStackTrace();
                             }
 
                             return null;
                         }
 
+                        @Override
+                        protected void onPostExecute(Void aVoid) {
+                            if (networkError) {
+                                Toasty.error(MainActivity.this, getString(R.string.network_error)).show();
+                            } else if (!loginCorrect) {
+                                Toasty.warning(MainActivity.this, getString(R.string.not_dound_user_with_this_phone)).show();
+                            } else {
+                                etNewChat.setText("");
+                                etNewChat.setVisibility(View.GONE);
+                                btNewChat.setText("+");
+                                btNewChat.setOnClickListener(buttonNormal);
+                            }
+                        }
                     }.execute();
                 }
             }
@@ -136,7 +151,7 @@ public class MainActivity extends AppCompatActivity {
                 // Example: 095_777_77_77 (10 symbols)
                 if (s.toString().length() == 10) {
                     btNewChat.setText("->");
-                } else {
+                } else if (btNewChat.getText().toString().equals("->")){
                     btNewChat.setText("-");
                 }
             }
@@ -144,7 +159,7 @@ public class MainActivity extends AppCompatActivity {
 
         ListView contactsList = (ListView) findViewById(R.id.contactsList);
         adapter = new ArrayAdapter<>(this,
-                android.R.layout.simple_list_item_1, names);
+                android.R.layout.simple_list_item_1, chats);
         contactsList.setAdapter(adapter);
         contactsList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             public void onItemClick(AdapterView<?> parent, View view,

@@ -28,9 +28,9 @@ public class Receiver extends Service {
             public void run() {
                 SQLiteDatabase db = dbHelper.getWritableDatabase();
 
-
-                dbHelper.close();
             }
-        });
+        }).start();
+
+        dbHelper.close();
     }
 }
