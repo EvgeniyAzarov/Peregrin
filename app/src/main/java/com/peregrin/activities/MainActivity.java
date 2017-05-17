@@ -2,6 +2,7 @@ package com.peregrin.activities;
 
 import android.content.ContentValues;
 import android.content.Intent;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -68,6 +69,7 @@ public class MainActivity extends AppCompatActivity {
                         private String interlocutor_login;
                         private boolean networkError;
                         private boolean loginCorrect;
+                        private boolean alreadyAdded;
 
                         @Override
                         protected void onPreExecute() {
@@ -93,13 +95,35 @@ public class MainActivity extends AppCompatActivity {
                                     String interlocutor_nickname = (String) inputStream.readObject();
 
                                     DBHelper dbHelper = new DBHelper(MainActivity.this);
-                                    SQLiteDatabase database = dbHelper.getWritableDatabase();
+                                    SQLiteDatabase db = dbHelper.getWritableDatabase();
 
-                                    ContentValues cv = new ContentValues();
-                                    cv.put("interlocutor_login", interlocutor_login);
-                                    cv.put("interlocutor_nickname", interlocutor_nickname);
+                                    if (db.query("chats_list", null,
+                                            "interlocutor_login =" + interlocutor_login,
+                                            null, null, null, null).moveToFirst()) {
 
-                                    database.insert("chats_list", null, cv);
+                                        ContentValues cv = new ContentValues();
+                                        cv.put("interlocutor_login", interlocutor_login);
+                                        cv.put("interlocutor_nickname", interlocutor_nickname);
+
+                                        db.insert("chats_list", null, cv);
+
+                                        Cursor chats_list = db.query("chats_list", null, null, null, null, null, null);
+
+                                        if (chats_list.moveToFirst()) {
+                                            chats.clear();
+                                            do {
+                                                chats.add(
+                                                        chats_list.getString(
+                                                                chats_list.getColumnIndex("interlocutor_nickname")
+                                                        )
+                                                );
+                                            } while (chats_list.moveToNext());
+                                        }
+
+                                        chats_list.close();
+                                    } else {
+                                        alreadyAdded = true;
+                                    }
 
                                     dbHelper.close();
                                 }
@@ -115,7 +139,9 @@ public class MainActivity extends AppCompatActivity {
                             if (networkError) {
                                 Toasty.error(MainActivity.this, getString(R.string.network_error)).show();
                             } else if (!loginCorrect) {
-                                Toasty.warning(MainActivity.this, getString(R.string.not_dound_user_with_this_phone)).show();
+                                Toasty.warning(MainActivity.this, getString(R.string.not_found_user_with_this_phone)).show();
+                            } else if (alreadyAdded) {
+                                Toasty.warning(MainActivity.this, getString(R.string.already_added)).show();
                             } else {
                                 etNewChat.setText("");
                                 etNewChat.setVisibility(View.GONE);
@@ -141,17 +167,19 @@ public class MainActivity extends AppCompatActivity {
 
         etNewChat.addTextChangedListener(new TextWatcher() {
             @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            }
 
             @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {}
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+            }
 
             @Override
             public void afterTextChanged(Editable s) {
                 // Example: 095_777_77_77 (10 symbols)
                 if (s.toString().length() == 10) {
                     btNewChat.setText("->");
-                } else if (btNewChat.getText().toString().equals("->")){
+                } else if (btNewChat.getText().toString().equals("->")) {
                     btNewChat.setText("-");
                 }
             }
@@ -168,6 +196,33 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        Thread updateListThread = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                while (!Thread.currentThread().isInterrupted()) {
+                    DBHelper dbHelper = new DBHelper(MainActivity.this);
+                    SQLiteDatabase db = dbHelper.getReadableDatabase();
+
+                    Cursor chats_list = db.query("chats_list", null, null, null, null, null, null);
+
+                    if (chats_list.moveToFirst()) {
+                        chats.clear();
+                        do {
+                            chats.add(
+                                    chats_list.getString(
+                                            chats_list.getColumnIndex("interlocutor_nickname")
+                                    )
+                            );
+                        } while (chats_list.moveToNext());
+                    }
+
+                    chats_list.close();
+                    dbHelper.close();
+                }
+            }
+        });
+
+        updateListThread.start();
     }
 
     @Override

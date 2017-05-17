@@ -26,7 +26,6 @@ import static android.content.SharedPreferences.Editor;
 public class EnterActivity extends AppCompatActivity {
     EditText user_phone;
     EditText user_password;
-    Button bt;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,12 +33,10 @@ public class EnterActivity extends AppCompatActivity {
         setContentView(R.layout.activity_enter);
         setSupportActionBar((Toolbar) findViewById(R.id.toolbar));
 
-
         user_phone = (EditText) findViewById(R.id.enter_phone);
         user_password = (EditText) findViewById(R.id.enter_password);
-        bt = (Button) findViewById(R.id.enter_bt);
 
-        bt.setOnClickListener(new View.OnClickListener() {
+        findViewById(R.id.enter_bt).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 new AsyncTask<Void, Void, Void>() {
