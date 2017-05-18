@@ -14,8 +14,7 @@ public class DBHelper extends SQLiteOpenHelper {
     public void onCreate(SQLiteDatabase db) {
         db.execSQL("create table chats_list ("
                 + "interlocutor_login text,"
-                + "interlocutor_nickname text,"
-                + "last_message text" + ");");
+                + "interlocutor_nickname text);");
 
         db.execSQL("create table messages ("
                 + "sender_login text,"

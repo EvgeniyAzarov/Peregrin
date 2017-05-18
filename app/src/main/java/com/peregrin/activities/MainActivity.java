@@ -1,6 +1,8 @@
 package com.peregrin.activities;
 
+import android.app.ProgressDialog;
 import android.content.ContentValues;
+import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
@@ -14,11 +16,14 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.SimpleAdapter;
+import android.widget.TextView;
 
 import com.peregrin.DBHelper;
 import com.peregrin.R;
@@ -29,18 +34,21 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import es.dmoral.toasty.Toasty;
 
 public class MainActivity extends AppCompatActivity {
 
-    private ArrayList<String> chats = new ArrayList<>();
-    ArrayAdapter<String> adapter;
+    private ArrayList<HashMap<String, String>> chats = new ArrayList<>();
+    SimpleAdapter adapter;
 
     private Button btNewChat;
     private EditText etNewChat;
     private View.OnClickListener buttonChecked;
     private View.OnClickListener buttonNormal;
+
+    private SQLiteDatabase db;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,8 +61,31 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         setSupportActionBar((Toolbar) findViewById(R.id.toolbar));
 
-        btNewChat = (Button) findViewById(R.id.btNewChat);
+        db = new DBHelper(MainActivity.this).getWritableDatabase();
 
+        adapter = new SimpleAdapter(MainActivity.this, chats,
+                R.layout.chat_entry,
+                new String[]{"nickname", "phone"},
+                new int[]{R.id.twNickname, R.id.twPhone});
+        updateChatsList();
+        adapter.notifyDataSetChanged();
+
+        ListView contactsList = (ListView) findViewById(R.id.contactsList);
+        contactsList.setAdapter(adapter);
+        contactsList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                String login = ((TextView) view.findViewById(R.id.twPhone)).getText().toString();
+
+                MainActivity.this.startActivity(
+                        new Intent(
+                                MainActivity.this, ChatActivity.class
+                        ).putExtra("interlocutor_login", login)
+                );
+            }
+        });
+
+        btNewChat = (Button) findViewById(R.id.btNewChat);
         etNewChat = (EditText) findViewById(R.id.etNewChat);
 
         buttonChecked = new View.OnClickListener() {
@@ -66,6 +97,8 @@ public class MainActivity extends AppCompatActivity {
                     btNewChat.setOnClickListener(buttonNormal);
                 } else {
                     new AsyncTask<Void, Void, Void>() {
+                        private ProgressDialog progressDialog;
+
                         private String interlocutor_login;
                         private boolean networkError;
                         private boolean loginCorrect;
@@ -74,6 +107,18 @@ public class MainActivity extends AppCompatActivity {
                         @Override
                         protected void onPreExecute() {
                             interlocutor_login = etNewChat.getText().toString();
+
+                            InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+                            imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, 0);
+
+                            etNewChat.setText("");
+                            etNewChat.setVisibility(View.GONE);
+                            btNewChat.setText("+");
+                            btNewChat.setOnClickListener(buttonNormal);
+
+                            progressDialog = new ProgressDialog(MainActivity.this);
+                            progressDialog.setMessage(getString(R.string.wait));
+                            progressDialog.show();
                         }
 
                         @Override
@@ -97,9 +142,11 @@ public class MainActivity extends AppCompatActivity {
                                     DBHelper dbHelper = new DBHelper(MainActivity.this);
                                     SQLiteDatabase db = dbHelper.getWritableDatabase();
 
-                                    if (db.query("chats_list", null,
+                                    Cursor cursor = db.query("chats_list", null,
                                             "interlocutor_login =" + interlocutor_login,
-                                            null, null, null, null).moveToFirst()) {
+                                            null, null, null, null);
+
+                                    if (!cursor.moveToFirst()) {
 
                                         ContentValues cv = new ContentValues();
                                         cv.put("interlocutor_login", interlocutor_login);
@@ -107,24 +154,18 @@ public class MainActivity extends AppCompatActivity {
 
                                         db.insert("chats_list", null, cv);
 
-                                        Cursor chats_list = db.query("chats_list", null, null, null, null, null, null);
-
-                                        if (chats_list.moveToFirst()) {
-                                            chats.clear();
-                                            do {
-                                                chats.add(
-                                                        chats_list.getString(
-                                                                chats_list.getColumnIndex("interlocutor_nickname")
-                                                        )
-                                                );
-                                            } while (chats_list.moveToNext());
-                                        }
-
-                                        chats_list.close();
+                                        runOnUiThread(new Runnable() {
+                                            @Override
+                                            public void run() {
+                                                updateChatsList();
+                                                adapter.notifyDataSetChanged();
+                                            }
+                                        });
                                     } else {
                                         alreadyAdded = true;
                                     }
 
+                                    cursor.close();
                                     dbHelper.close();
                                 }
                             } catch (IOException | ClassNotFoundException e) {
@@ -136,17 +177,14 @@ public class MainActivity extends AppCompatActivity {
 
                         @Override
                         protected void onPostExecute(Void aVoid) {
+                            progressDialog.dismiss();
+
                             if (networkError) {
                                 Toasty.error(MainActivity.this, getString(R.string.network_error)).show();
                             } else if (!loginCorrect) {
                                 Toasty.warning(MainActivity.this, getString(R.string.not_found_user_with_this_phone)).show();
                             } else if (alreadyAdded) {
                                 Toasty.warning(MainActivity.this, getString(R.string.already_added)).show();
-                            } else {
-                                etNewChat.setText("");
-                                etNewChat.setVisibility(View.GONE);
-                                btNewChat.setText("+");
-                                btNewChat.setOnClickListener(buttonNormal);
                             }
                         }
                     }.execute();
@@ -184,45 +222,6 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         });
-
-        ListView contactsList = (ListView) findViewById(R.id.contactsList);
-        adapter = new ArrayAdapter<>(this,
-                android.R.layout.simple_list_item_1, chats);
-        contactsList.setAdapter(adapter);
-        contactsList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            public void onItemClick(AdapterView<?> parent, View view,
-                                    int position, long id) {
-                Log.d("null", "itemClick: position = " + position + ", id = " + id);
-            }
-        });
-
-        Thread updateListThread = new Thread(new Runnable() {
-            @Override
-            public void run() {
-                while (!Thread.currentThread().isInterrupted()) {
-                    DBHelper dbHelper = new DBHelper(MainActivity.this);
-                    SQLiteDatabase db = dbHelper.getReadableDatabase();
-
-                    Cursor chats_list = db.query("chats_list", null, null, null, null, null, null);
-
-                    if (chats_list.moveToFirst()) {
-                        chats.clear();
-                        do {
-                            chats.add(
-                                    chats_list.getString(
-                                            chats_list.getColumnIndex("interlocutor_nickname")
-                                    )
-                            );
-                        } while (chats_list.moveToNext());
-                    }
-
-                    chats_list.close();
-                    dbHelper.close();
-                }
-            }
-        });
-
-        updateListThread.start();
     }
 
     @Override
@@ -236,11 +235,37 @@ public class MainActivity extends AppCompatActivity {
         switch (item.getItemId()) {
             case R.id.action_log_out:
                 getSharedPreferences("user", MODE_PRIVATE).edit().clear().apply();
+                db.delete("chats_list", null, null);
+                db.delete("messages", null, null);
                 startActivity(new Intent(MainActivity.this, SwitchActivity.class)
                         .setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK)
                 );
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+
+        db.close();
+    }
+
+    private void updateChatsList() {
+        Cursor chats_list = db.query("chats_list", null, null, null, null, null, null);
+
+        if (chats_list.moveToFirst()) {
+            chats.clear();
+            do {
+                HashMap<String, String> chat = new HashMap<>();
+                chat.put("nickname", chats_list.getString(chats_list.getColumnIndex("interlocutor_nickname")));
+                chat.put("phone", chats_list.getString(chats_list.getColumnIndex("interlocutor_login")));
+
+                chats.add(chat);
+            } while (chats_list.moveToNext());
+        }
+
+        chats_list.close();
     }
 }

@@ -52,6 +52,7 @@ public class Receiver extends Service {
                         outputStream.writeObject(request);
 
                         ResultSet messages = (ResultSet) inputStream.readObject();
+                        outputStream.writeBoolean(true);
                         ContentValues cv = new ContentValues();
 
                         while (!messages.next()) {

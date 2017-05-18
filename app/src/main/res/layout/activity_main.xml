@@ -20,25 +20,25 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="bottom|end"
+            android:layout_marginBottom="20dp"
+            android:layout_marginEnd="20dp"
             android:orientation="horizontal">
 
             <EditText
                 android:id="@+id/etNewChat"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:ems="10"
+                android:hint="@string/interlocutor_phone"
                 android:inputType="number"
                 android:textSize="18sp"
-                android:visibility="gone"
-                android:hint="@string/interlocutor_phone"/>
+                android:visibility="gone" />
 
             <Button
                 android:id="@+id/btNewChat"
                 android:layout_width="50dp"
                 android:layout_height="50dp"
-                android:layout_marginBottom="20dp"
-                android:layout_marginEnd="20dp"
                 android:layout_weight="1"
                 android:background="@drawable/button_new_chat_background"
                 android:gravity="center"

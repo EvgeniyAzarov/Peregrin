@@ -16,7 +16,7 @@ public class SwitchActivity extends AppCompatActivity {
         setContentView(R.layout.activity_switch);
         setSupportActionBar((Toolbar) findViewById(R.id.toolbar));
 
-        findViewById(R.id.btEnter).setOnClickListener(new View.OnClickListener() {
+        findViewById(R.id.btSend).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 SwitchActivity.this.startActivity(new Intent(

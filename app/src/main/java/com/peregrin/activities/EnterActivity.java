@@ -52,7 +52,7 @@ public class EnterActivity extends AppCompatActivity {
                     @Override
                     protected void onPreExecute() {
                         progressDialog = new ProgressDialog(EnterActivity.this);
-                        progressDialog.setMessage("Подождите...");
+                        progressDialog.setMessage(getString(R.string.wait));
                         progressDialog.show();
 
                         phone = user_phone.getText().toString();
