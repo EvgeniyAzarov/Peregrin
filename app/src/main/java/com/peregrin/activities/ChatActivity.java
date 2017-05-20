@@ -1,5 +1,7 @@
 package com.peregrin.activities;
 
+import android.content.ContentValues;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -8,6 +10,7 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.ListView;
 
+import com.peregrin.DBHelper;
 import com.peregrin.R;
 import com.peregrin.ServerInfo;
 
@@ -34,6 +37,9 @@ public class ChatActivity extends AppCompatActivity {
         setSupportActionBar((Toolbar) findViewById(R.id.toolbar));
 
         interlocutorLogin = getIntent().getStringExtra("interlocutor_login");
+
+        final DBHelper dbHelper = new DBHelper(this);
+        final SQLiteDatabase db = dbHelper.getWritableDatabase();
 
         messages = new ArrayList<>();
 
@@ -72,7 +78,10 @@ public class ChatActivity extends AppCompatActivity {
 
                             outputStream.writeObject(request);
 
-                            //TODO add insert to DB
+                            ContentValues cv = new ContentValues();
+                            cv.put("sender_login", interlocutorLogin);
+                            cv.put("content", content);
+                            db.insert("messages", null, cv);
 
                         } catch (IOException e) {
                             networkError = true;
