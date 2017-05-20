@@ -6,6 +6,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.ListView;
 
 import com.peregrin.R;
 import com.peregrin.ServerInfo;
@@ -13,10 +14,16 @@ import com.peregrin.ServerInfo;
 import java.io.IOException;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
+import java.util.ArrayList;
+import java.util.HashMap;
 
 import es.dmoral.toasty.Toasty;
 
 public class ChatActivity extends AppCompatActivity {
+
+    private MessageEntryAdapter adapter;
+    private ListView messagesList;
+    private ArrayList<HashMap<String, String>> messages;
 
     private String interlocutorLogin;
 
@@ -28,6 +35,12 @@ public class ChatActivity extends AppCompatActivity {
 
         interlocutorLogin = getIntent().getStringExtra("interlocutor_login");
 
+        messages = new ArrayList<>();
+
+        adapter = new MessageEntryAdapter(this, messages);
+
+        messagesList = (ListView) findViewById(R.id.messages_list);
+        messagesList.setAdapter(adapter);
 
         findViewById(R.id.btSend).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -59,6 +72,8 @@ public class ChatActivity extends AppCompatActivity {
 
                             outputStream.writeObject(request);
 
+                            //TODO add insert to DB
+
                         } catch (IOException e) {
                             networkError = true;
                         }
@@ -70,10 +85,16 @@ public class ChatActivity extends AppCompatActivity {
                     protected void onPostExecute(Void aVoid) {
                         if (networkError) {
                             Toasty.error(ChatActivity.this, getString(R.string.network_error)).show();
+                        } else {
+                            updateChat();
                         }
                     }
                 }.execute();
             }
         });
+    }
+
+    private void updateChat() {
+
     }
 }

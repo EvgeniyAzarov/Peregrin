@@ -19,13 +19,13 @@ import java.util.List;
 import java.util.Map;
 
 
-public class MessageEntryAdapter extends BaseAdapter {
+class MessageEntryAdapter extends BaseAdapter {
 
     private ArrayList<HashMap<String, String>> messages;
     private String userLogin;
     private LayoutInflater inflater;
 
-    public MessageEntryAdapter(Context context, ArrayList<HashMap<String, String>> messages) {
+    MessageEntryAdapter(Context context, ArrayList<HashMap<String, String>> messages) {
         this.inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
         this.userLogin = context
@@ -55,7 +55,7 @@ public class MessageEntryAdapter extends BaseAdapter {
 
         View view = convertView;
         if (view == null) {
-            view = inflater.inflate(R.layout.message_layout, parent);
+            view = inflater.inflate(R.layout.message_layout, parent, false);
         }
 
         TextView tvMessage = (TextView) view.findViewById(
