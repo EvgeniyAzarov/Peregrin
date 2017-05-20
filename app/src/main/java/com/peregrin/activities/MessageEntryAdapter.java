@@ -5,34 +5,70 @@ import android.support.annotation.NonNull;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Adapter;
 import android.widget.ArrayAdapter;
+import android.widget.BaseAdapter;
+import android.widget.SimpleAdapter;
 import android.widget.TextView;
 
 import com.peregrin.R;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 
-public class MessageEntryAdapter extends ArrayAdapter<String> {
-    public MessageEntryAdapter(Context context, ArrayList<String> strings) {
-        super(context, R.layout.user_message, strings);
+public class MessageEntryAdapter extends BaseAdapter {
+
+    private ArrayList<HashMap<String, String>> messages;
+    private String userLogin;
+    private LayoutInflater inflater;
+
+    public MessageEntryAdapter(Context context, ArrayList<HashMap<String, String>> messages) {
+        this.inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+
+        this.userLogin = context
+                .getSharedPreferences("user", Context.MODE_PRIVATE)
+                .getString("phone", null);
+
+        this.messages = messages;
     }
 
-    @NonNull
     @Override
-    public View getView(int position, View convertView, @NonNull ViewGroup parent) {
-        final LayoutInflater inflater =
-                (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        final View entryView = inflater.inflate(R.layout.user_message, parent, false);
-        final TextView entryMessage = (TextView) entryView.findViewById(R.id.tvMessage);
+    public int getCount() {
+        return messages.size();
+    }
 
-        final String fullMessage = getItem(position);
-        if (fullMessage != null) {
-            final int endOfName = fullMessage.indexOf(":") + 1;
+    @Override
+    public Object getItem(int position) {
+        return messages.get(position);
+    }
 
-            entryMessage.setText(fullMessage.substring(endOfName, fullMessage.length()));
+    @Override
+    public long getItemId(int position) {
+        return position;
+    }
+
+    @Override
+    public View getView(int position, View convertView, ViewGroup parent) {
+
+        View view = convertView;
+        if (view == null) {
+            view = inflater.inflate(R.layout.message_layout, parent);
         }
 
-        return entryView;
+        TextView tvMessage = (TextView) view.findViewById(
+                (messages.get(position).get("sender_login").equals(userLogin) ?
+                        R.id.tvUserMessage :
+                        R.id.tvInterlocutorMessage
+                )
+        );
+
+        tvMessage.setVisibility(View.VISIBLE);
+
+        tvMessage.setText(messages.get(position).get("content"));
+
+        return view;
     }
 }

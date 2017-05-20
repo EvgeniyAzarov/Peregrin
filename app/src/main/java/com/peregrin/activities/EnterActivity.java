@@ -11,6 +11,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.peregrin.BCrypt;
 import com.peregrin.R;
 import com.peregrin.ServerInfo;
 

@@ -27,7 +27,6 @@ public class ChatActivity extends AppCompatActivity {
         setSupportActionBar((Toolbar) findViewById(R.id.toolbar));
 
         interlocutorLogin = getIntent().getStringExtra("interlocutor_login");
-        setTitle(interlocutorLogin);
 
 
         findViewById(R.id.btSend).setOnClickListener(new View.OnClickListener() {
@@ -76,12 +75,5 @@ public class ChatActivity extends AppCompatActivity {
                 }.execute();
             }
         });
-    }
-
-    @Override
-    protected void onStart() {
-        super.onStart();
-
-
     }
 }

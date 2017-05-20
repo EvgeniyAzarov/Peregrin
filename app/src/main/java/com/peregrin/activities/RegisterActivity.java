@@ -11,6 +11,7 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.peregrin.BCrypt;
 import com.peregrin.R;
 import com.peregrin.ServerInfo;
 
@@ -74,13 +75,13 @@ public class RegisterActivity extends AppCompatActivity {
                                 String[] request = new String[4];
                                 request[0] = "USER_REGISTRATION";
                                 request[1] = phone;
-                                request[2] = password;
+                                request[2] = BCrypt.hashpw(password, BCrypt.gensalt(5));
                                 request[3] = nickname;
 
                                 outputStream.writeObject(request);
 
                                 registrationSuccessful = inputStream.readBoolean();
-                            } catch (IOException e) {
+                            } catch (IOException | IllegalArgumentException e) {
                                 networkError = true;
                             }
 

@@ -21,4 +21,5 @@
     <string name="too_short_password">Слишком короткий пароль</string>
     <string name="not_found_user_with_this_phone">Пользователь с таким номером не зарегестрирован</string>
     <string name="already_added">Пользователь уже добавлен</string>
+    <string name="wait">Подождите...</string>
 </resources>
