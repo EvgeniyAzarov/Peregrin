@@ -121,13 +121,14 @@ public class ChatActivity extends AppCompatActivity {
     }
 
     private void updateChat() {
-        Cursor messages_list = db.query("messages", null,"recipient_login=" + interlocutorLogin + "or (recipient_login=" + sender + "and sender_login = " + interlocutorLogin + ")",null, null, null, null);
+        Cursor messages_list = db.query("messages", null,"recipient_login=? or (recipient_login=? and sender_login =?)",new String[]{interlocutorLogin,sender,interlocutorLogin}, null, null, null);
 
         if (messages_list.moveToFirst()) {
             messages.clear();
             do {
                 HashMap<String, String> message = new HashMap<>();
-                message.put("nickname", messages_list.getString(messages_list.getColumnIndex("context")));
+                message.put("sender_login", messages_list.getString(messages_list.getColumnIndex("sender_login")));
+                message.put("content", messages_list.getString(messages_list.getColumnIndex("content")));
 
                 messages.add(message);
             } while (messages_list.moveToNext());
@@ -147,3 +148,4 @@ public class ChatActivity extends AppCompatActivity {
         super.onDestroy();
     }
 }
+
