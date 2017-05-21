@@ -118,7 +118,8 @@ public class ChatActivity extends AppCompatActivity {
             messages.clear();
             do {
                 HashMap<String, String> message = new HashMap<>();
-                message.put("nickname", messages_list.getString(messages_list.getColumnIndex("context")));
+                message.put("sender_login", messages_list.getString(messages_list.getColumnIndex("sender_login")));
+                message.put("content", messages_list.getString(messages_list.getColumnIndex("content")));
 
                 messages.add(message);
             } while (messages_list.moveToNext());
