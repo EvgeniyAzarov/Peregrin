@@ -37,7 +37,7 @@ public class Receiver extends Service {
             public void run() {
                 SQLiteDatabase db = dbHelper.getWritableDatabase();
 
-                String recipient = getSharedPreferences("user", MODE_PRIVATE).getString("phone", "");
+                String recipient = getSharedPreferences("user", MODE_PRIVATE).getString("phone", null);
 
                 while (Thread.currentThread().isInterrupted()) {
                     try (
@@ -57,6 +57,7 @@ public class Receiver extends Service {
 
                         while (!messages.next()) {
                             cv.put("sender_login", messages.getString("sender_login"));
+                            cv.put("recipient_login", messages.getString("recipient_login"));
                             cv.put("content", messages.getString("content"));
                             db.insert("messages", null, cv);
                         }
@@ -64,6 +65,8 @@ public class Receiver extends Service {
 
                     }
                 }
+
+                db.close();
             }
         }).start();
         dbHelper.close();

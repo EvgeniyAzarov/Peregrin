@@ -18,6 +18,7 @@ public class DBHelper extends SQLiteOpenHelper {
 
         db.execSQL("create table messages ("
                 + "sender_login text,"
+                + "recipient_login text"
                 + "content text" + ");");
     }
 

@@ -24,6 +24,9 @@ import es.dmoral.toasty.Toasty;
 
 public class ChatActivity extends AppCompatActivity {
 
+    private DBHelper dbHelper;
+    private SQLiteDatabase db;
+
     private MessageEntryAdapter adapter;
     private ListView messagesList;
     private ArrayList<HashMap<String, String>> messages;
@@ -38,8 +41,8 @@ public class ChatActivity extends AppCompatActivity {
 
         interlocutorLogin = getIntent().getStringExtra("interlocutor_login");
 
-        final DBHelper dbHelper = new DBHelper(this);
-        final SQLiteDatabase db = dbHelper.getWritableDatabase();
+        dbHelper = new DBHelper(this);
+        db = dbHelper.getWritableDatabase();
 
         messages = new ArrayList<>();
 
@@ -70,16 +73,19 @@ public class ChatActivity extends AppCompatActivity {
                                 Socket socket = new Socket(ServerInfo.ADDRESS, ServerInfo.PORT);
                                 ObjectOutputStream outputStream = new ObjectOutputStream(socket.getOutputStream());
                         ) {
+                            String sender = getSharedPreferences("user", MODE_PRIVATE).getString("phone", "");
+
                             String[] request = new String[4];
                             request[0] = "POST_MESSAGE";
-                            request[1] = getSharedPreferences("user", MODE_PRIVATE).getString("phone", "");
+                            request[1] = sender;
                             request[2] = interlocutorLogin;
                             request[3] = content;
 
                             outputStream.writeObject(request);
 
                             ContentValues cv = new ContentValues();
-                            cv.put("sender_login", interlocutorLogin);
+                            cv.put("sender_login", sender);
+                            cv.put("recipient_login", interlocutorLogin);
                             cv.put("content", content);
                             db.insert("messages", null, cv);
 
@@ -105,5 +111,13 @@ public class ChatActivity extends AppCompatActivity {
 
     private void updateChat() {
 
+    }
+
+    @Override
+    protected void onDestroy() {
+        db.close();
+        dbHelper.close();
+
+        super.onDestroy();
     }
 }
