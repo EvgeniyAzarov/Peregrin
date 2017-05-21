@@ -1,11 +1,11 @@
-package com.peregrin;
+package com.peregrin.crypt;
 
 import java.io.IOException;
 import java.io.ObjectOutputStream;
 import java.io.OutputStream;
 
 
-class CryptOutputStream extends ObjectOutputStream {
+public class CryptOutputStream extends ObjectOutputStream {
     public CryptOutputStream(OutputStream out) throws IOException {
         super(out);
     }

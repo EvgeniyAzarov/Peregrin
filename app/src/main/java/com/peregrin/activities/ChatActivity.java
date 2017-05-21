@@ -14,12 +14,21 @@ import android.widget.ListView;
 import com.peregrin.DBHelper;
 import com.peregrin.R;
 import com.peregrin.ServerInfo;
+import com.peregrin.crypt.CryptInputStream;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
+import java.security.InvalidAlgorithmParameterException;
+import java.security.InvalidKeyException;
+import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.HashMap;
+
+import javax.crypto.BadPaddingException;
+import javax.crypto.IllegalBlockSizeException;
+import javax.crypto.NoSuchPaddingException;
 
 import es.dmoral.toasty.Toasty;
 
