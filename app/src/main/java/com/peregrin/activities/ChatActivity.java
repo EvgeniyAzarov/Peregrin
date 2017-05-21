@@ -1,6 +1,7 @@
 package com.peregrin.activities;
 
 import android.content.ContentValues;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -32,6 +33,7 @@ public class ChatActivity extends AppCompatActivity {
     private ArrayList<HashMap<String, String>> messages;
 
     private String interlocutorLogin;
+    String sender;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,6 +42,7 @@ public class ChatActivity extends AppCompatActivity {
         setSupportActionBar((Toolbar) findViewById(R.id.toolbar));
 
         interlocutorLogin = getIntent().getStringExtra("interlocutor_login");
+        sender = getSharedPreferences("user", MODE_PRIVATE).getString("phone", "");
 
         dbHelper = new DBHelper(this);
         db = dbHelper.getWritableDatabase();
@@ -73,7 +76,6 @@ public class ChatActivity extends AppCompatActivity {
                                 Socket socket = new Socket(ServerInfo.ADDRESS, ServerInfo.PORT);
                                 ObjectOutputStream outputStream = new ObjectOutputStream(socket.getOutputStream());
                         ) {
-                            String sender = getSharedPreferences("user", MODE_PRIVATE).getString("phone", "");
 
                             String[] request = new String[4];
                             request[0] = "POST_MESSAGE";
@@ -110,8 +112,23 @@ public class ChatActivity extends AppCompatActivity {
     }
 
     private void updateChat() {
+        Cursor messages_list = db.query("messages", null,"recipient_login=" + interlocutorLogin + "or (recipient_login=" + sender + "and sender_login = " + interlocutorLogin + ")",null, null, null, null);
 
+        if (messages_list.moveToFirst()) {
+            messages.clear();
+            do {
+                HashMap<String, String> message = new HashMap<>();
+                message.put("nickname", messages_list.getString(messages_list.getColumnIndex("context")));
+
+                messages.add(message);
+            } while (messages_list.moveToNext());
+        }
+
+        messages_list.close();
+
+        adapter.notifyDataSetChanged();
     }
+
 
     @Override
     protected void onDestroy() {
