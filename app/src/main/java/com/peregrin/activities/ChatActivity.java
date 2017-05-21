@@ -112,7 +112,7 @@ public class ChatActivity extends AppCompatActivity {
     }
 
     private void updateChat() {
-        Cursor messages_list = db.query("messages", null,"recipient_login=" + interlocutorLogin + "or (recipient_login=" + sender + "and sender_login = " + interlocutorLogin + ")",null, null, null, null);
+        Cursor messages_list = db.query("messages", null,"recipient_login=? or (recipient_login=? and sender_login =?)",new String[]{interlocutorLogin,sender,interlocutorLogin}, null, null, null);
 
         if (messages_list.moveToFirst()) {
             messages.clear();
@@ -139,3 +139,4 @@ public class ChatActivity extends AppCompatActivity {
         super.onDestroy();
     }
 }
+
