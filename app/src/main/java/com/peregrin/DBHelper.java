@@ -17,9 +17,9 @@ public class DBHelper extends SQLiteOpenHelper {
                 + "interlocutor_nickname text);");
 
         db.execSQL("create table messages ("
-                + "sender_login text,"
-                + "recipient_login text"
-                + "content text" + ");");
+                + "sender_login text, "
+                + "recipient_login text, "
+                + "content text);");
     }
 
     @Override
