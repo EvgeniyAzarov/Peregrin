@@ -69,6 +69,7 @@ public class ChatActivity extends AppCompatActivity {
                 new AsyncTask<Void, Void, Void>() {
                     private String content;
 
+                    private boolean messageCorrect = true;
                     private boolean networkError = false;
 
                     @Override
@@ -76,32 +77,38 @@ public class ChatActivity extends AppCompatActivity {
                         EditText etMessage = (EditText) findViewById(R.id.etMessage);
                         content = etMessage.getText().toString();
                         etMessage.setText("");
+                        if(content.equals("")){
+                            messageCorrect = false;
+                        }
                     }
 
 
                     @Override
                     protected Void doInBackground(Void... params) {
-                        try (
-                                Socket socket = new Socket(ServerInfo.ADDRESS, ServerInfo.PORT);
-                                ObjectOutputStream outputStream = new ObjectOutputStream(socket.getOutputStream());
-                        ) {
 
-                            String[] request = new String[4];
-                            request[0] = "POST_MESSAGE";
-                            request[1] = sender;
-                            request[2] = interlocutorLogin;
-                            request[3] = content;
+                        if(messageCorrect) {
+                            try (
+                                    Socket socket = new Socket(ServerInfo.ADDRESS, ServerInfo.PORT);
+                                    ObjectOutputStream outputStream = new ObjectOutputStream(socket.getOutputStream());
+                            ) {
 
-                            outputStream.writeObject(request);
+                                String[] request = new String[4];
+                                request[0] = "POST_MESSAGE";
+                                request[1] = sender;
+                                request[2] = interlocutorLogin;
+                                request[3] = content;
 
-                            ContentValues cv = new ContentValues();
-                            cv.put("sender_login", sender);
-                            cv.put("recipient_login", interlocutorLogin);
-                            cv.put("content", content);
-                            db.insert("messages", null, cv);
+                                outputStream.writeObject(request);
 
-                        } catch (IOException e) {
-                            networkError = true;
+                                ContentValues cv = new ContentValues();
+                                cv.put("sender_login", sender);
+                                cv.put("recipient_login", interlocutorLogin);
+                                cv.put("content", content);
+                                db.insert("messages", null, cv);
+
+                            } catch (IOException e) {
+                                networkError = true;
+                            }
                         }
 
                         return null;
