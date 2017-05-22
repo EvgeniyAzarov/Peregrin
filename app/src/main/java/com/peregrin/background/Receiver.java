@@ -1,10 +1,12 @@
 package com.peregrin.background;
 
+import android.app.NotificationManager;
 import android.app.Service;
 import android.content.ContentValues;
 import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.IBinder;
+import android.support.annotation.IntDef;
 import android.support.annotation.Nullable;
 
 import com.peregrin.DBHelper;
@@ -27,9 +29,7 @@ public class Receiver extends Service {
     }
 
     @Override
-    public void onCreate() {
-        super.onCreate();
-
+    public int onStartCommand(Intent intent, int flags, int startId) {
         final DBHelper dbHelper = new DBHelper(this);
 
         new Thread(new Runnable() {
@@ -39,7 +39,7 @@ public class Receiver extends Service {
 
                 String recipient = getSharedPreferences("user", MODE_PRIVATE).getString("phone", null);
 
-                while (Thread.currentThread().isInterrupted()) {
+                while (!Thread.currentThread().isInterrupted()) {
                     try (
                             Socket socket = new Socket(ServerInfo.ADDRESS, ServerInfo.PORT);
                             ObjectOutputStream outputStream = new ObjectOutputStream(socket.getOutputStream());
@@ -61,6 +61,8 @@ public class Receiver extends Service {
                             cv.put("content", messages.getString("content"));
                             db.insert("messages", null, cv);
                         }
+
+                        outputStream.writeBoolean(true);
                     } catch (IOException | SQLException | ClassNotFoundException ignored) {
 
                     }
@@ -70,5 +72,7 @@ public class Receiver extends Service {
             }
         }).start();
         dbHelper.close();
+
+        return super.onStartCommand(intent, flags, startId);
     }
 }

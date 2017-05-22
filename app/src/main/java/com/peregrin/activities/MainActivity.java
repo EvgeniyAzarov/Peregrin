@@ -12,15 +12,13 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
 import android.widget.TextView;
@@ -28,6 +26,7 @@ import android.widget.TextView;
 import com.peregrin.DBHelper;
 import com.peregrin.R;
 import com.peregrin.ServerInfo;
+import com.peregrin.background.Receiver;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -43,7 +42,7 @@ public class MainActivity extends AppCompatActivity {
     private ArrayList<HashMap<String, String>> chats = new ArrayList<>();
     SimpleAdapter adapter;
 
-    private Button btNewChat;
+    private ImageButton btNewChat;
     private EditText etNewChat;
     private View.OnClickListener buttonChecked;
     private View.OnClickListener buttonNormal;
@@ -60,6 +59,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         setSupportActionBar((Toolbar) findViewById(R.id.toolbar));
+        startService(new Intent(MainActivity.this, Receiver.class));
 
         db = new DBHelper(MainActivity.this).getWritableDatabase();
 
@@ -85,7 +85,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        btNewChat = (Button) findViewById(R.id.btNewChat);
+        btNewChat = (ImageButton) findViewById(R.id.btNewChat);
         etNewChat = (EditText) findViewById(R.id.etNewChat);
 
         buttonChecked = new View.OnClickListener() {
@@ -93,7 +93,8 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View v) {
                 if (etNewChat.getText().toString().length() != 10) {
                     etNewChat.setVisibility(View.GONE);
-                    btNewChat.setText("+");
+                    btNewChat.setImageResource(R.drawable.ic_button_new_chat_add);
+                    btNewChat.setContentDescription("ic_add");
                     btNewChat.setOnClickListener(buttonNormal);
                 } else {
                     new AsyncTask<Void, Void, Void>() {
@@ -113,7 +114,8 @@ public class MainActivity extends AppCompatActivity {
 
                             etNewChat.setText("");
                             etNewChat.setVisibility(View.GONE);
-                            btNewChat.setText("+");
+                            btNewChat.setImageResource(R.drawable.ic_button_new_chat_add);
+                            btNewChat.setContentDescription("ic_add");
                             btNewChat.setOnClickListener(buttonNormal);
 
                             progressDialog = new ProgressDialog(MainActivity.this);
@@ -196,7 +198,8 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 etNewChat.setVisibility(View.VISIBLE);
-                btNewChat.setText("-");
+                btNewChat.setImageResource(R.drawable.ic_button_new_chat_remove);
+                btNewChat.setContentDescription("ic_remove");
                 btNewChat.setOnClickListener(buttonChecked);
             }
         };
@@ -216,9 +219,11 @@ public class MainActivity extends AppCompatActivity {
             public void afterTextChanged(Editable s) {
                 // Example: 095_777_77_77 (10 symbols)
                 if (s.toString().length() == 10) {
-                    btNewChat.setText("->");
-                } else if (btNewChat.getText().toString().equals("->")) {
-                    btNewChat.setText("-");
+                    btNewChat.setImageResource(R.drawable.ic_button_new_chat_done);
+                    btNewChat.setContentDescription("ic_done");
+                } else if (btNewChat.getContentDescription().toString().equals("ic_done")) {
+                    btNewChat.setImageResource(R.drawable.ic_button_new_chat_remove);
+                    btNewChat.setContentDescription("ic_remove");
                 }
             }
         });

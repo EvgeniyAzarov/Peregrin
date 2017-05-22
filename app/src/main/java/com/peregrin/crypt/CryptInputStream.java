@@ -19,7 +19,7 @@ import javax.crypto.spec.SecretKeySpec;
 
 public class CryptInputStream extends ObjectInputStream {
     public CryptInputStream(InputStream in) throws IOException {
-//        super(in);
+        super(in);
     }
 
     public String readString() throws IOException,
@@ -31,12 +31,7 @@ public class CryptInputStream extends ObjectInputStream {
             BadPaddingException,
             IllegalBlockSizeException {
 
-        //String encrypted = (String) super.readObject();
-        String encrypted =
-                "p+oJjsGEULNSptP5Sj1BM5w65hMjkqzahORd8ybIkqyJD0V/608c1tYuKIvDLUIa\n" +
-                "RQ9jQ6+EwbyMFjlMa6xuEnxOx4sez001hd3NsLO7p00XoTqAvi9zwUBII+\n" +
-                "nPphP6Zr0P4icvODpmhlmRILgSBsUf1H/3VN1lNXjo4LTa\n" +
-                "GxLqW3VSg9iV9yFq4VMWqsRF";
+        String encrypted = (String) super.readObject();
 
         final byte[] keyBytes = "ZZHHYYTTUUHHGGRR".getBytes();
         final byte[] ivBytes = "AAACCCDDDYYUURRS".getBytes();
