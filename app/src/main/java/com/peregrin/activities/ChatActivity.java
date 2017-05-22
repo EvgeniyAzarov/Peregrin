@@ -8,7 +8,10 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
+import android.widget.AbsListView;
+import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ListView;
 
 import com.peregrin.DBHelper;
@@ -54,6 +57,8 @@ public class ChatActivity extends AppCompatActivity {
         interlocutorLogin = getIntent().getStringExtra("interlocutor_login");
         sender = getSharedPreferences("user", MODE_PRIVATE).getString("phone", "");
 
+        final ImageButton btCycle = (ImageButton) findViewById(R.id.btCycling);
+
         dbHelper = new DBHelper(this);
         db = dbHelper.getWritableDatabase();
 
@@ -78,6 +83,22 @@ public class ChatActivity extends AppCompatActivity {
                         }
                     }
                 });
+            }
+        });
+
+        messagesList.setOnScrollListener(new AbsListView.OnScrollListener() {
+            public void onScrollStateChanged(AbsListView view, int scrollState) {
+
+            }
+
+            public void onScroll(AbsListView view, int firstVisibleItem,
+                                 int visibleItemCount, int totalItemCount) {
+                if(totalItemCount-firstVisibleItem-visibleItemCount>=3){
+                    btCycle.setVisibility(View.VISIBLE);
+                }
+                else{
+                    btCycle.setVisibility(View.GONE);
+                }
             }
         });
 
