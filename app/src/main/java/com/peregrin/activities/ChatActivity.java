@@ -64,6 +64,23 @@ public class ChatActivity extends AppCompatActivity {
         messagesList = (ListView) findViewById(R.id.messages_list);
         messagesList.setAdapter(adapter);
 
+        findViewById(R.id.btCycling).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                messagesList.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        int position = messagesList.getCount()-1;
+                        messagesList.setSelection(position);
+                        View v = messagesList.getChildAt(position);
+                        if (v != null) {
+                            v.requestFocus();
+                        }
+                    }
+                });
+            }
+        });
+
         findViewById(R.id.btSend).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
