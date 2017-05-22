@@ -19,6 +19,7 @@ import com.peregrin.crypt.CryptInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.ObjectOutputStream;
+import java.lang.reflect.Array;
 import java.net.Socket;
 import java.security.InvalidAlgorithmParameterException;
 import java.security.InvalidKeyException;
@@ -121,24 +122,66 @@ public class ChatActivity extends AppCompatActivity {
     }
 
     private void updateChat() {
-        Cursor messages_list = db.query("messages", null,
-                "recipient_login=? or (recipient_login=? and sender_login =?)",
-                new String[]{interlocutorLogin,sender,interlocutorLogin}, null, null, null);
+        new AsyncTask<Void, Void, Void>() {
+            private final ArrayList<HashMap<String, String>> newMessages = new ArrayList<>();
 
-        if (messages_list.moveToFirst()) {
-            messages.clear();
-            do {
-                HashMap<String, String> message = new HashMap<>();
-                message.put("sender_login", messages_list.getString(messages_list.getColumnIndex("sender_login")));
-                message.put("content", messages_list.getString(messages_list.getColumnIndex("content")));
+            @Override
+            protected void onPreExecute() {
+                super.onPreExecute();
+            }
 
-                messages.add(message);
-            } while (messages_list.moveToNext());
-        }
+            @Override
+            protected Void doInBackground(Void... params) {
 
-        messages_list.close();
+                Cursor messages_list;
 
-        adapter.notifyDataSetChanged();
+                do {
+                    messages_list = db.query("messages", null,
+                            "recipient_login=? or (recipient_login=? and sender_login = ?)",
+                            new String[]{interlocutorLogin, sender, interlocutorLogin}, null, null, null);
+
+                    if (!messages_list.moveToFirst())
+                        try {
+                            Thread.sleep(500);
+                        } catch (InterruptedException ignored) {
+
+                        }
+                } while (!messages_list.moveToFirst());
+
+
+                messages.clear();
+                do {
+                    HashMap<String, String> message = new HashMap<>();
+                    message.put("sender_login", messages_list.getString(messages_list.getColumnIndex("sender_login")));
+                    message.put("content", messages_list.getString(messages_list.getColumnIndex("content")));
+
+                    newMessages.add(message);
+                } while (messages_list.moveToNext());
+
+                messages_list.close();
+
+                return null;
+            }
+
+            @Override
+            protected void onPostExecute(Void aVoid) {
+                messages.addAll(newMessages);
+
+                adapter.notifyDataSetChanged();
+
+                messagesList.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        int position = messagesList.getCount()-1;
+                        messagesList.setSelection(position);
+                        View v = messagesList.getChildAt(position);
+                        if (v != null) {
+                            v.requestFocus();
+                        }
+                    }
+                });
+            }
+        }.execute();
     }
 
     @Override
