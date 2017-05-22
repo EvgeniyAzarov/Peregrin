@@ -1,15 +1,21 @@
 package com.peregrin.background;
 
+import android.app.Notification;
 import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.app.Service;
 import android.content.ContentValues;
+import android.content.Context;
 import android.content.Intent;
+import android.content.res.Resources;
 import android.database.sqlite.SQLiteDatabase;
+import android.graphics.BitmapFactory;
 import android.os.IBinder;
 import android.support.annotation.IntDef;
 import android.support.annotation.Nullable;
 
 import com.peregrin.DBHelper;
+import com.peregrin.R;
 import com.peregrin.ServerInfo;
 
 import java.io.IOException;
@@ -21,6 +27,8 @@ import java.sql.SQLException;
 
 
 public class Receiver extends Service {
+
+    private static final int NOTIFY_ID = 867549;
 
     @Nullable
     @Override
@@ -63,8 +71,33 @@ public class Receiver extends Service {
                         }
 
                         outputStream.writeBoolean(true);
-                    } catch (IOException | SQLException | ClassNotFoundException ignored) {
 
+                        Context context = getApplicationContext();
+
+                        Intent notificationIntent = new Intent(context, Receiver.class);
+                        PendingIntent contentIntent = PendingIntent.getService(context,
+                                0, notificationIntent,
+                                PendingIntent.FLAG_CANCEL_CURRENT);
+
+                        Resources res = context.getResources();
+                        Notification.Builder builder = new Notification.Builder(context);
+
+                        builder.setContentIntent(contentIntent)
+                                .setSmallIcon(R.mipmap.ic_toolbar)
+                                .setLargeIcon(BitmapFactory.decodeResource(res, R.mipmap.ic_launcher_round))
+                                .setWhen(System.currentTimeMillis())
+                                .setAutoCancel(true)
+                                .setContentTitle("Liza")
+                                .setContentText(messages.getString("content"));
+
+                        Notification notification = builder.build();
+
+                        NotificationManager notificationManager = (NotificationManager) context
+                                .getSystemService(Context.NOTIFICATION_SERVICE);
+                        notificationManager.notify(NOTIFY_ID, notification);
+
+                    } catch (IOException | SQLException | ClassNotFoundException e) {
+                        e.printStackTrace();
                     }
                 }
 
