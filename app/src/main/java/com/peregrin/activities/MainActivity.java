@@ -59,7 +59,8 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         setSupportActionBar((Toolbar) findViewById(R.id.toolbar));
-        this.startService(new Intent(MainActivity.this, Receiver.class));
+
+        MainActivity.this.startService(new Intent(MainActivity.this, Receiver.class));
 
         db = new DBHelper(MainActivity.this).getWritableDatabase();
 

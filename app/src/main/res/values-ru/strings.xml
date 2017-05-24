@@ -11,7 +11,7 @@
     <string name="repeat_password">Повторите пароль</string>
     <string name="user_with_this_phone_was_registered">Пользователь с таким номером телефона уже зарегестрирован!</string>
     <string name="wrong_password">Неверный телефон или пароль</string>
-    <string name="you_are_not_authorisation">Вы не авторизовались. Пожалуйста, зарегестрируйтесь или войдите в свой аккаунт, что бы использовать все функции приложения.</string>
+    <string name="you_are_not_authorisation">Вы не авторизовались. Пожалуйста, зарегистрируйтесь или войдите в свой аккаунт, что бы использовать все функции приложения.</string>
     <string name="interlocutor_phone">Номер собеседника</string>
     <string name="about">О приложении</string>
     <string name="settings">Настройки</string>

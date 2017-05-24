@@ -58,16 +58,19 @@ class MessageEntryAdapter extends BaseAdapter {
             view = inflater.inflate(R.layout.message_layout, parent, false);
         }
 
-        TextView tvMessage = (TextView) view.findViewById(
-                (messages.get(position).get("sender_login").equals(userLogin) ?
-                        R.id.tvUserMessage :
-                        R.id.tvInterlocutorMessage
-                )
-        );
+        TextView tvUserMessage = (TextView) view.findViewById(R.id.tvUserMessage);
 
-        tvMessage.setVisibility(View.VISIBLE);
+        TextView tvInterlocutorMessage = (TextView) view.findViewById(R.id.tvInterlocutorMessage);
 
-        tvMessage.setText(messages.get(position).get("content"));
+        if (messages.get(position).get("sender_login").equals(userLogin)) {
+            tvUserMessage.setVisibility(View.VISIBLE);
+            tvUserMessage.setText(messages.get(position).get("content"));
+            tvInterlocutorMessage.setVisibility(View.GONE);
+        } else {
+            tvInterlocutorMessage.setVisibility(View.VISIBLE);
+            tvInterlocutorMessage.setText(messages.get(position).get("content"));
+            tvUserMessage.setVisibility(View.GONE);
+        }
 
         return view;
     }

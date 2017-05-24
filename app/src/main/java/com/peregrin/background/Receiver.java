@@ -11,8 +11,8 @@ import android.content.res.Resources;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.BitmapFactory;
 import android.os.IBinder;
-import android.support.annotation.IntDef;
 import android.support.annotation.Nullable;
+import android.util.Log;
 
 import com.peregrin.DBHelper;
 import com.peregrin.R;
@@ -22,8 +22,8 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.HashMap;
 
 
 public class Receiver extends Service {
@@ -38,6 +38,10 @@ public class Receiver extends Service {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
+
+        Log.i("peregrin", "Сервис стартовал");
+
+
         final DBHelper dbHelper = new DBHelper(this);
 
         new Thread(new Runnable() {
@@ -57,18 +61,22 @@ public class Receiver extends Service {
                         request[0] = "GET_MESSAGES";
                         request[1] = recipient;
 
+                        Log.i("peregrin", "флаг");
+
                         outputStream.writeObject(request);
 
-                        ResultSet messages = (ResultSet) inputStream.readObject();
+                        ArrayList<HashMap<String, String>> messages
+                                = (ArrayList<HashMap<String, String>>) inputStream.readObject();
                         outputStream.writeBoolean(true);
                         ContentValues cv = new ContentValues();
 
-                        while (!messages.next()) {
-                            cv.put("sender_login", messages.getString("sender_login"));
-                            cv.put("recipient_login", messages.getString("recipient_login"));
-                            cv.put("content", messages.getString("content"));
+                        for (int i = 0; i < messages.size(); i++) {
+                            cv.put("sender_login", messages.get(i).get("sender_login"));
+                            cv.put("recipient_login", messages.get(i).get("recipient_login"));
+                            cv.put("content", messages.get(i).get("content"));
                             db.insert("messages", null, cv);
                         }
+
 
                         outputStream.writeBoolean(true);
 
@@ -87,8 +95,8 @@ public class Receiver extends Service {
                                 .setLargeIcon(BitmapFactory.decodeResource(res, R.mipmap.ic_launcher_round))
                                 .setWhen(System.currentTimeMillis())
                                 .setAutoCancel(true)
-                                .setContentTitle("Liza")
-                                .setContentText(messages.getString("content"));
+                                .setContentTitle(messages.get(messages.size()-1).get("sender_login"))
+                                .setContentText(messages.get(messages.size()-1).get("content"));
 
                         Notification notification = builder.build();
 
@@ -96,8 +104,8 @@ public class Receiver extends Service {
                                 .getSystemService(Context.NOTIFICATION_SERVICE);
                         notificationManager.notify(NOTIFY_ID, notification);
 
-                    } catch (IOException | SQLException | ClassNotFoundException e) {
-                        e.printStackTrace();
+                    } catch (IOException | ClassNotFoundException e) {
+                        Log.d("peregrin", e.getMessage());
                     }
                 }
 

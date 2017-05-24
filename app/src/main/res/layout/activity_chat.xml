@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -26,30 +25,23 @@
                 android:id="@+id/messages_list"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="100"
                 android:divider="@null"
                 android:dividerHeight="0dp" />
 
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="bottom|end"
-                android:layout_marginEnd="5dp"
-                android:layout_marginBottom="5dp"
-                android:orientation="horizontal">
 
-                <ImageButton
-                    android:id="@+id/btCycling"
-                    android:layout_width="68dp"
-                    android:layout_height="33dp"
-                    android:layout_marginEnd="3dp"
-                    android:layout_weight="1"
-                    android:background="@drawable/button_cycling"
-                    android:gravity="center"
-                    android:src="@drawable/ic_cycling_button"
-                    android:tint="#FF808080"
-                    android:visibility="gone" />
-            </LinearLayout>
+            <ImageButton
+                android:id="@+id/btCycling"
+                android:layout_width="50dp"
+                android:layout_height="33dp"
+                android:layout_marginEnd="10dp"
+                android:layout_marginBottom="10dp"
+                android:layout_gravity="bottom|end"
+                android:gravity="center"
+                android:background="@drawable/button_cycling_background"
+                android:src="@drawable/ic_cycling_button"
+                android:tint="#FF808080"
+                android:visibility="visible" />
+
 
         </FrameLayout>
 
@@ -68,16 +60,18 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
-                android:layout_weight="3"
+                android:layout_weight="1"
                 android:ems="10"
                 android:inputType="textMultiLine" />
 
             <ImageButton
                 android:id="@+id/btSend"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:src="@drawable/ic_send_button" />
+                android:layout_gravity="center_vertical"
+                android:layout_marginEnd="3dp"
+                android:layout_width="60dp"
+                android:layout_height="33dp"
+                android:src="@drawable/ic_send_button"
+                android:background="@drawable/button_send_background"/>
         </LinearLayout>
     </LinearLayout>
 
