@@ -17,6 +17,7 @@ import android.util.Log;
 import com.peregrin.DBHelper;
 import com.peregrin.R;
 import com.peregrin.ServerInfo;
+import com.peregrin.activities.ChatActivity;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -70,6 +71,10 @@ public class Receiver extends Service {
                         outputStream.writeBoolean(true);
                         ContentValues cv = new ContentValues();
 
+                        Intent intent = new Intent(ChatActivity.BROADCAST_ACTION);
+                        intent.putExtra("received",true);
+                        sendBroadcast(intent);
+
                         for (int i = 0; i < messages.size(); i++) {
                             cv.put("sender_login", messages.get(i).get("sender_login"));
                             cv.put("recipient_login", messages.get(i).get("recipient_login"));
@@ -114,6 +119,10 @@ public class Receiver extends Service {
         }).start();
         dbHelper.close();
 
+
+
         return super.onStartCommand(intent, flags, startId);
+
+
     }
 }

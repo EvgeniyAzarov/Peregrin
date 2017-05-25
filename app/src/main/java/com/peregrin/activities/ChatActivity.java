@@ -1,6 +1,10 @@
 package com.peregrin.activities;
 
+import android.content.BroadcastReceiver;
 import android.content.ContentValues;
+import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.AsyncTask;
@@ -46,6 +50,8 @@ public class ChatActivity extends AppCompatActivity {
     private ListView messagesList;
     private ArrayList<HashMap<String, String>> messages;
 
+    public final static String BROADCAST_ACTION = "UpdateChat";
+
     private String interlocutorLogin;
     String sender;
 
@@ -57,6 +63,19 @@ public class ChatActivity extends AppCompatActivity {
 
         interlocutorLogin = getIntent().getStringExtra("interlocutor_login");
         sender = getSharedPreferences("user", MODE_PRIVATE).getString("phone", "");
+
+        BroadcastReceiver br = new BroadcastReceiver() {
+            public void onReceive(Context context, Intent intent) {
+                boolean received = intent.getBooleanExtra("received", false);
+
+                if(received){
+                    updateChat();
+                }
+            }
+        };
+
+        IntentFilter intFilt = new IntentFilter(BROADCAST_ACTION);
+        registerReceiver(br, intFilt);
 
         final ImageButton btCycle = (ImageButton) findViewById(R.id.btCycling);
 
