@@ -64,7 +64,7 @@ public class RegisterActivity extends AppCompatActivity {
                         @Override
                         protected void onPreExecute() {
                             progressDialog = new ProgressDialog(RegisterActivity.this);
-                            progressDialog.setMessage("Подождите...");
+                            progressDialog.setMessage(getResources().getString(R.string.wait));
                             progressDialog.show();
                         }
 
