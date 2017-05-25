@@ -42,9 +42,6 @@ public class Receiver extends Service {
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
 
-        Log.i("peregrin", "Сервис стартовал");
-
-
         final DBHelper dbHelper = new DBHelper(this);
 
         new Thread(new Runnable() {
@@ -63,8 +60,6 @@ public class Receiver extends Service {
                         String[] request = new String[2];
                         request[0] = "GET_MESSAGES";
                         request[1] = recipient;
-
-                        Log.i("peregrin", "флаг");
 
                         outputStream.writeObject(request);
 
@@ -89,7 +84,7 @@ public class Receiver extends Service {
 
                         Context context = getApplicationContext();
 
-                        Intent notificationIntent = new Intent(context, Receiver.class);
+                        Intent notificationIntent = new Intent(context, ChatActivity.class);
                         PendingIntent contentIntent = PendingIntent.getService(context,
                                 0, notificationIntent,
                                 PendingIntent.FLAG_CANCEL_CURRENT);
@@ -124,9 +119,6 @@ public class Receiver extends Service {
         dbHelper.close();
 
 
-
         return super.onStartCommand(intent, flags, startId);
-
-
     }
 }

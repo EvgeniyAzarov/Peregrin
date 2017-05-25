@@ -64,19 +64,6 @@ public class ChatActivity extends AppCompatActivity {
         interlocutorLogin = getIntent().getStringExtra("interlocutor_login");
         sender = getSharedPreferences("user", MODE_PRIVATE).getString("phone", "");
 
-        BroadcastReceiver br = new BroadcastReceiver() {
-            public void onReceive(Context context, Intent intent) {
-                boolean received = intent.getBooleanExtra("received", false);
-
-                if(received){
-                    updateChat();
-                }
-            }
-        };
-
-        IntentFilter intFilt = new IntentFilter(BROADCAST_ACTION);
-        registerReceiver(br, intFilt);
-
         final ImageButton btCycle = (ImageButton) findViewById(R.id.btCycling);
 
         dbHelper = new DBHelper(this);
@@ -184,6 +171,18 @@ public class ChatActivity extends AppCompatActivity {
                 }.execute();
             }
         });
+
+        BroadcastReceiver br = new BroadcastReceiver() {
+            public void onReceive(Context context, Intent intent) {
+                boolean received = intent.getBooleanExtra("received", false);
+                if(received){
+                    updateChat();
+                }
+            }
+        };
+
+        IntentFilter intFilt = new IntentFilter(BROADCAST_ACTION);
+        registerReceiver(br, intFilt);
     }
 
     private void updateChat() {
