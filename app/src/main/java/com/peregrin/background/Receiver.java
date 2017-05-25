@@ -10,6 +10,8 @@ import android.content.Intent;
 import android.content.res.Resources;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.BitmapFactory;
+import android.media.RingtoneManager;
+import android.net.Uri;
 import android.os.IBinder;
 import android.support.annotation.Nullable;
 import android.util.Log;
@@ -95,6 +97,7 @@ public class Receiver extends Service {
                         Resources res = context.getResources();
                         Notification.Builder builder = new Notification.Builder(context);
 
+
                         builder.setContentIntent(contentIntent)
                                 .setSmallIcon(R.mipmap.ic_toolbar)
                                 .setLargeIcon(BitmapFactory.decodeResource(res, R.mipmap.ic_launcher_round))
@@ -104,6 +107,7 @@ public class Receiver extends Service {
                                 .setContentText(messages.get(messages.size()-1).get("content"));
 
                         Notification notification = builder.build();
+                        notification.defaults = Notification.DEFAULT_ALL;
 
                         NotificationManager notificationManager = (NotificationManager) context
                                 .getSystemService(Context.NOTIFICATION_SERVICE);
