@@ -31,6 +31,7 @@ import java.util.HashMap;
 
 public class Receiver extends Service {
 
+    // just little crutch. In future must be changed to everything another chat
     private static final int NOTIFY_ID = 867549;
 
     @Nullable
@@ -69,7 +70,7 @@ public class Receiver extends Service {
                         ContentValues cv = new ContentValues();
 
                         Intent intent = new Intent(ChatActivity.BROADCAST_ACTION);
-                        intent.putExtra("received",true);
+                        intent.putExtra("received", true);
                         sendBroadcast(intent);
 
                         for (int i = 0; i < messages.size(); i++) {
@@ -79,12 +80,16 @@ public class Receiver extends Service {
                             db.insert("messages", null, cv);
                         }
 
-
                         outputStream.writeBoolean(true);
 
                         Context context = getApplicationContext();
 
                         Intent notificationIntent = new Intent(context, ChatActivity.class);
+                        notificationIntent.putExtra("interlocutor_login",
+                                messages.get(messages.size() - 1).get("sender_login"));
+                        notificationIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP
+                                | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+
                         PendingIntent contentIntent = PendingIntent.getService(context,
                                 0, notificationIntent,
                                 PendingIntent.FLAG_CANCEL_CURRENT);
@@ -94,12 +99,12 @@ public class Receiver extends Service {
 
 
                         builder.setContentIntent(contentIntent)
-                                .setSmallIcon(R.mipmap.ic_toolbar)
-                                .setLargeIcon(BitmapFactory.decodeResource(res, R.mipmap.ic_launcher_round))
+                                .setSmallIcon(R.mipmap.ic_launcher)
+                                .setLargeIcon(BitmapFactory.decodeResource(res, R.mipmap.ic_launcher))
                                 .setWhen(System.currentTimeMillis())
                                 .setAutoCancel(true)
-                                .setContentTitle(messages.get(messages.size()-1).get("sender_login"))
-                                .setContentText(messages.get(messages.size()-1).get("content"));
+                                .setContentTitle(messages.get(messages.size() - 1).get("sender_login"))
+                                .setContentText(messages.get(messages.size() - 1).get("content"));
 
                         Notification notification = builder.build();
                         notification.defaults = Notification.DEFAULT_ALL;
