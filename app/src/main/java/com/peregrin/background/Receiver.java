@@ -4,9 +4,11 @@ import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.Service;
+import android.content.BroadcastReceiver;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.res.Resources;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.BitmapFactory;
@@ -32,6 +34,7 @@ import java.util.HashMap;
 public class Receiver extends Service {
 
     private static final int NOTIFY_ID = 867549;
+    private boolean ChatState;
 
     @Nullable
     @Override
@@ -43,6 +46,21 @@ public class Receiver extends Service {
     public int onStartCommand(Intent intent, int flags, int startId) {
 
         final DBHelper dbHelper = new DBHelper(this);
+
+        BroadcastReceiver brCreated = new BroadcastReceiver() {
+            public void onReceive(Context context, Intent intent) {
+                boolean ActivityState = intent.getBooleanExtra("ActivityState", false);
+                if(ActivityState){
+                    ChatState = true;
+                }
+                else{
+                    ChatState = false;
+                }
+            }
+        };
+
+        IntentFilter intFiltCreate = new IntentFilter(ChatActivity.BROADCAST_ACTION2);
+        registerReceiver(brCreated, intFiltCreate);
 
         new Thread(new Runnable() {
             @Override
@@ -68,7 +86,7 @@ public class Receiver extends Service {
                         outputStream.writeBoolean(true);
                         ContentValues cv = new ContentValues();
 
-                        Intent intent = new Intent(ChatActivity.BROADCAST_ACTION);
+                        Intent intent = new Intent(ChatActivity.BROADCAST_ACTION1);
                         intent.putExtra("received",true);
                         sendBroadcast(intent);
 

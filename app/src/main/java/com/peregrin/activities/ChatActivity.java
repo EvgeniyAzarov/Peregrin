@@ -50,7 +50,8 @@ public class ChatActivity extends AppCompatActivity {
     private ListView messagesList;
     private ArrayList<HashMap<String, String>> messages;
 
-    public final static String BROADCAST_ACTION = "UpdateChat";
+    public final static String BROADCAST_ACTION1 = "UpdateChat";
+    public final static String BROADCAST_ACTION2 = "";
 
     private String interlocutorLogin;
     String sender;
@@ -75,6 +76,10 @@ public class ChatActivity extends AppCompatActivity {
 
         messagesList = (ListView) findViewById(R.id.messages_list);
         messagesList.setAdapter(adapter);
+
+        Intent intent = new Intent(ChatActivity.BROADCAST_ACTION2);
+        intent.putExtra("ActivityState",true);
+        sendBroadcast(intent);
 
         findViewById(R.id.btCycling).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -181,7 +186,7 @@ public class ChatActivity extends AppCompatActivity {
             }
         };
 
-        IntentFilter intFilt = new IntentFilter(BROADCAST_ACTION);
+        IntentFilter intFilt = new IntentFilter(BROADCAST_ACTION1);
         registerReceiver(br, intFilt);
     }
 
@@ -254,6 +259,15 @@ public class ChatActivity extends AppCompatActivity {
         dbHelper.close();
 
         super.onDestroy();
+    }
+
+    @Override
+    protected  void onPause(){
+        Intent intent = new Intent(ChatActivity.BROADCAST_ACTION2);
+        intent.putExtra("ActivityState",false);
+        sendBroadcast(intent);
+
+        super.onPause();
     }
 }
 
