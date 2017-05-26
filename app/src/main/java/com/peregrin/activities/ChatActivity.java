@@ -12,9 +12,7 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
-import android.view.WindowManager;
 import android.widget.AbsListView;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ListView;
@@ -22,22 +20,12 @@ import android.widget.ListView;
 import com.peregrin.DBHelper;
 import com.peregrin.R;
 import com.peregrin.ServerInfo;
-import com.peregrin.crypt.CryptInputStream;
 
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.ObjectOutputStream;
-import java.lang.reflect.Array;
 import java.net.Socket;
-import java.security.InvalidAlgorithmParameterException;
-import java.security.InvalidKeyException;
-import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.HashMap;
-
-import javax.crypto.BadPaddingException;
-import javax.crypto.IllegalBlockSizeException;
-import javax.crypto.NoSuchPaddingException;
 
 import es.dmoral.toasty.Toasty;
 
@@ -50,19 +38,10 @@ public class ChatActivity extends AppCompatActivity {
     private ListView messagesList;
     private ArrayList<HashMap<String, String>> messages;
 
-    private ImageButton btCycle;
-
-    public final static String BROADCAST_ACTION = "UpdateChat";
+    public final static String ACTION_UPDATE_CHAT = "UpdateChat";
 
     private String interlocutorLogin;
     String sender;
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-
-        updateChat();
-    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -72,6 +51,8 @@ public class ChatActivity extends AppCompatActivity {
 
         interlocutorLogin = getIntent().getStringExtra("interlocutor_login");
         sender = getSharedPreferences("user", MODE_PRIVATE).getString("phone", "");
+
+        final ImageButton btCycle = (ImageButton) findViewById(R.id.btCycling);
 
         dbHelper = new DBHelper(this);
         db = dbHelper.getWritableDatabase();
@@ -83,15 +64,13 @@ public class ChatActivity extends AppCompatActivity {
         messagesList = (ListView) findViewById(R.id.messages_list);
         messagesList.setAdapter(adapter);
 
-        btCycle = (ImageButton) findViewById(R.id.btCycling);
-
-        btCycle.setOnClickListener(new View.OnClickListener() {
+        findViewById(R.id.btCycling).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 messagesList.post(new Runnable() {
                     @Override
                     public void run() {
-                        int position = messagesList.getCount() - 1;
+                        int position = messagesList.getCount()-1;
                         messagesList.setSelection(position);
                         View v = messagesList.getChildAt(position);
                         if (v != null) {
@@ -109,9 +88,10 @@ public class ChatActivity extends AppCompatActivity {
 
             public void onScroll(AbsListView view, int firstVisibleItem,
                                  int visibleItemCount, int totalItemCount) {
-                if (totalItemCount - firstVisibleItem - visibleItemCount >= 3) {
+                if(totalItemCount-firstVisibleItem-visibleItemCount>=3){
                     btCycle.setVisibility(View.VISIBLE);
-                } else {
+                }
+                else{
                     btCycle.setVisibility(View.GONE);
                 }
             }
@@ -131,7 +111,7 @@ public class ChatActivity extends AppCompatActivity {
                         EditText etMessage = (EditText) findViewById(R.id.etMessage);
                         content = etMessage.getText().toString();
                         etMessage.setText("");
-                        if (content.equals("")) {
+                        if(content.equals("")){
                             messageCorrect = false;
                         }
                     }
@@ -140,7 +120,7 @@ public class ChatActivity extends AppCompatActivity {
                     @Override
                     protected Void doInBackground(Void... params) {
 
-                        if (messageCorrect) {
+                        if(messageCorrect) {
                             try (
                                     Socket socket = new Socket(ServerInfo.ADDRESS, ServerInfo.PORT);
                                     ObjectOutputStream outputStream = new ObjectOutputStream(socket.getOutputStream());
@@ -183,13 +163,13 @@ public class ChatActivity extends AppCompatActivity {
         BroadcastReceiver br = new BroadcastReceiver() {
             public void onReceive(Context context, Intent intent) {
                 boolean received = intent.getBooleanExtra("received", false);
-                if (received) {
+                if(received){
                     updateChat();
                 }
             }
         };
 
-        IntentFilter intFilt = new IntentFilter(BROADCAST_ACTION);
+        IntentFilter intFilt = new IntentFilter(ACTION_UPDATE_CHAT);
         registerReceiver(br, intFilt);
     }
 
@@ -241,30 +221,36 @@ public class ChatActivity extends AppCompatActivity {
 
                 adapter.notifyDataSetChanged();
 
-                if (btCycle.getVisibility() == View.GONE) {
-
-                    messagesList.post(new Runnable() {
-                        @Override
-                        public void run() {
-                            int position = messagesList.getCount() - 1;
-                            messagesList.setSelection(position);
-                            View v = messagesList.getChildAt(position);
-                            if (v != null) {
-                                v.requestFocus();
-                            }
+                messagesList.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        int position = messagesList.getCount()-1;
+                        messagesList.setSelection(position);
+                        View v = messagesList.getChildAt(position);
+                        if (v != null) {
+                            v.requestFocus();
                         }
-                    });
-                }
+                    }
+                });
             }
         }.execute();
     }
 
     @Override
-    protected void onDestroy() {
-        super.onDestroy();
+    protected void onResume() {
+        super.onResume();
 
-        db.close();
-        dbHelper.close();
+        updateChat();
     }
+
+
+    // It's a big crutch!!!!! need to do normal
+    //    @Override
+//    protected void onDestroy() {
+//        db.close();
+//        dbHelper.close();
+//
+//        super.onDestroy();
+//    }
 }
 
