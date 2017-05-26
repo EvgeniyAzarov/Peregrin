@@ -9,6 +9,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Vibrator;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
@@ -108,6 +109,9 @@ public class ChatActivity extends AppCompatActivity {
 
                     @Override
                     protected void onPreExecute() {
+                        Vibrator vibrator = (Vibrator)getSystemService(Context.VIBRATOR_SERVICE);
+                        vibrator.vibrate(100);
+                        
                         EditText etMessage = (EditText) findViewById(R.id.etMessage);
                         content = etMessage.getText().toString();
                         etMessage.setText("");
