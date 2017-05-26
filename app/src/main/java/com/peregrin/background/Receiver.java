@@ -67,10 +67,6 @@ public class Receiver extends Service {
                         outputStream.writeBoolean(true);
                         ContentValues cv = new ContentValues();
 
-                        Intent intent = new Intent(ChatActivity.ACTION_UPDATE_CHAT);
-                        intent.putExtra("received",true);
-                        sendBroadcast(intent);
-
                         for (int i = 0; i < messages.size(); i++) {
                             cv.put("sender_login", messages.get(i).get("sender_login"));
                             cv.put("recipient_login", messages.get(i).get("recipient_login"));
@@ -78,34 +74,41 @@ public class Receiver extends Service {
                             db.insert("messages", null, cv);
                         }
 
-
                         outputStream.writeBoolean(true);
 
-                        Context context = getApplicationContext();
 
-                        Intent notificationIntent = new Intent(context, ChatActivity.class);
-                        PendingIntent contentIntent = PendingIntent.getService(context,
-                                0, notificationIntent,
-                                PendingIntent.FLAG_CANCEL_CURRENT);
+                        if (((ActivityStatusListener) getApplicationContext())
+                                .isChatActivityForeground()) {
+                            Intent intent = new Intent(ChatActivity.ACTION_UPDATE_CHAT);
+                            intent.putExtra("received", true);
+                            sendBroadcast(intent);
+                        } else {
 
-                        Resources res = context.getResources();
-                        Notification.Builder builder = new Notification.Builder(context);
+                            Context context = getApplicationContext();
 
+                            Intent notificationIntent = new Intent(context, ChatActivity.class);
+                            PendingIntent contentIntent = PendingIntent.getService(context,
+                                    0, notificationIntent,
+                                    PendingIntent.FLAG_CANCEL_CURRENT);
 
-                        builder.setContentIntent(contentIntent)
-                                .setSmallIcon(R.mipmap.ic_toolbar)
-                                .setLargeIcon(BitmapFactory.decodeResource(res, R.mipmap.ic_launcher_round))
-                                .setWhen(System.currentTimeMillis())
-                                .setAutoCancel(true)
-                                .setContentTitle(messages.get(messages.size()-1).get("sender_login"))
-                                .setContentText(messages.get(messages.size()-1).get("content"));
+                            Resources res = context.getResources();
+                            Notification.Builder builder = new Notification.Builder(context);
 
-                        Notification notification = builder.build();
-                        notification.defaults = Notification.DEFAULT_ALL;
+                            builder.setContentIntent(contentIntent)
+                                    .setSmallIcon(R.mipmap.ic_launcher)
+                                    .setLargeIcon(BitmapFactory.decodeResource(res, R.mipmap.ic_launcher))
+                                    .setWhen(System.currentTimeMillis())
+                                    .setAutoCancel(true)
+                                    .setContentTitle(messages.get(messages.size() - 1).get("sender_login"))
+                                    .setContentText(messages.get(messages.size() - 1).get("content"));
 
-                        NotificationManager notificationManager = (NotificationManager) context
-                                .getSystemService(Context.NOTIFICATION_SERVICE);
-                        notificationManager.notify(NOTIFY_ID, notification);
+                            Notification notification = builder.build();
+                            notification.defaults = Notification.DEFAULT_ALL;
+
+                            NotificationManager notificationManager = (NotificationManager) context
+                                    .getSystemService(Context.NOTIFICATION_SERVICE);
+                            notificationManager.notify(NOTIFY_ID, notification);
+                        }
 
                     } catch (IOException | ClassNotFoundException e) {
                         Log.d("peregrin", e.getMessage());
