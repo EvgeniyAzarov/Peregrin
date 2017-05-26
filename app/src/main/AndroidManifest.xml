@@ -10,7 +10,8 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/AppTheme">
+        android:theme="@style/AppTheme"
+        android:name=".background.ChatActivityStatusListener">
         <activity android:name=".activities.MainActivity"
             android:screenOrientation="portrait">
             <intent-filter>
@@ -29,5 +30,4 @@
             android:screenOrientation="portrait"/>
         <service android:name=".background.Receiver" />
     </application>
-
 </manifest>

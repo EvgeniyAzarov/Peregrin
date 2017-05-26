@@ -80,32 +80,36 @@ public class Receiver extends Service {
 
 
                         outputStream.writeBoolean(true);
+                        if (((ChatActivityStatusListener) getApplicationContext()).ChatActivityStatus) {Context context = getApplicationContext();
 
-                        Context context = getApplicationContext();
+                            Intent notificationIntent = new Intent(context, ChatActivity.class);
+                            PendingIntent contentIntent = PendingIntent.getService(context,
+                                    0, notificationIntent,
+                                    PendingIntent.FLAG_CANCEL_CURRENT);
 
-                        Intent notificationIntent = new Intent(context, ChatActivity.class);
-                        PendingIntent contentIntent = PendingIntent.getService(context,
-                                0, notificationIntent,
-                                PendingIntent.FLAG_CANCEL_CURRENT);
-
-                        Resources res = context.getResources();
-                        Notification.Builder builder = new Notification.Builder(context);
+                            Resources res = context.getResources();
+                            Notification.Builder builder = new Notification.Builder(context);
 
 
-                        builder.setContentIntent(contentIntent)
-                                .setSmallIcon(R.mipmap.ic_toolbar)
-                                .setLargeIcon(BitmapFactory.decodeResource(res, R.mipmap.ic_launcher_round))
-                                .setWhen(System.currentTimeMillis())
-                                .setAutoCancel(true)
-                                .setContentTitle(messages.get(messages.size()-1).get("sender_login"))
-                                .setContentText(messages.get(messages.size()-1).get("content"));
+                            builder.setContentIntent(contentIntent)
+                                    .setSmallIcon(R.mipmap.ic_toolbar)
+                                    .setLargeIcon(BitmapFactory.decodeResource(res, R.mipmap.ic_launcher_round))
+                                    .setWhen(System.currentTimeMillis())
+                                    .setAutoCancel(true)
+                                    .setContentTitle(messages.get(messages.size()-1).get("sender_login"))
+                                    .setContentText(messages.get(messages.size()-1).get("content"));
 
-                        Notification notification = builder.build();
-                        notification.defaults = Notification.DEFAULT_ALL;
+                            Notification notification = builder.build();
+                            notification.defaults = Notification.DEFAULT_ALL;
 
-                        NotificationManager notificationManager = (NotificationManager) context
-                                .getSystemService(Context.NOTIFICATION_SERVICE);
-                        notificationManager.notify(NOTIFY_ID, notification);
+                            NotificationManager notificationManager = (NotificationManager) context
+                                    .getSystemService(Context.NOTIFICATION_SERVICE);
+                            notificationManager.notify(NOTIFY_ID, notification);
+
+
+                        }
+
+
 
                     } catch (IOException | ClassNotFoundException e) {
                         Log.d("peregrin", e.getMessage());
