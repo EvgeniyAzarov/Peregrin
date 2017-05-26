@@ -246,6 +246,11 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(new Intent(MainActivity.this, SwitchActivity.class)
                         .setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK)
                 );
+                break;
+
+            case R.id.action_about:
+                startActivity(new Intent(MainActivity.this, AboutActivity.class));
+                break;
         }
 
         return super.onOptionsItemSelected(item);

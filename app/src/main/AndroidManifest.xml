@@ -11,7 +11,8 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".activities.MainActivity"
+        <activity
+            android:name=".activities.MainActivity"
             android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -19,15 +20,22 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".activities.ChatActivity"
-            android:windowSoftInputMode="stateHidden"/>
-        <activity android:name=".activities.SwitchActivity"
-            android:screenOrientation="portrait"/>
-        <activity android:name=".activities.EnterActivity"
-            android:screenOrientation="portrait"/>
-        <activity android:name=".activities.RegisterActivity"
-            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".activities.ChatActivity"
+            android:windowSoftInputMode="stateHidden" />
+        <activity
+            android:name=".activities.SwitchActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activities.EnterActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activities.RegisterActivity"
+            android:screenOrientation="portrait" />
+
         <service android:name=".background.Receiver" />
+
+        <activity android:name=".activities.AboutActivity" />
     </application>
 
 </manifest>

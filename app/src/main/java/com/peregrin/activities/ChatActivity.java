@@ -116,7 +116,6 @@ public class ChatActivity extends AppCompatActivity {
                         }
                     }
 
-
                     @Override
                     protected Void doInBackground(Void... params) {
 
