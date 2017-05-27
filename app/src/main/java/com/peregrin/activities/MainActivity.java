@@ -146,8 +146,8 @@ public class MainActivity extends AppCompatActivity {
                                     SQLiteDatabase db = dbHelper.getWritableDatabase();
 
                                     Cursor cursor = db.query("chats_list", null,
-                                            "interlocutor_login =" + interlocutor_login,
-                                            null, null, null, null);
+                                            "interlocutor_login = ?",
+                                            new String[]{interlocutor_login}, null, null, null);
 
                                     if (!cursor.moveToFirst()) {
 

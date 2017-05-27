@@ -18,6 +18,7 @@ import com.peregrin.DBHelper;
 import com.peregrin.R;
 import com.peregrin.ServerInfo;
 import com.peregrin.activities.ChatActivity;
+import com.peregrin.activities.MainActivity;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -86,8 +87,12 @@ public class Receiver extends Service {
                             Context context = getApplicationContext();
 
                             Intent notificationIntent = new Intent(context, ChatActivity.class);
-                            PendingIntent contentIntent = PendingIntent.getService(Receiver.this,
-                                    0, notificationIntent, 0);
+                            notificationIntent.putExtra("interlocutor_login",
+                                    messages.get(messages.size()-1).get("sender_login"));
+
+                            PendingIntent contentIntent = PendingIntent.getActivity(context,
+                                    0, notificationIntent,
+                                    PendingIntent.FLAG_CANCEL_CURRENT);
 
                             Resources res = context.getResources();
                             Notification.Builder builder = new Notification.Builder(context);
