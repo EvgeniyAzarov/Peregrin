@@ -5,10 +5,11 @@ import android.os.Bundle;
 import android.preference.EditTextPreference;
 import android.preference.Preference;
 import android.preference.PreferenceFragment;
-import android.preference.PreferenceManager;
 
 import com.peregrin.R;
 import com.peregrin.ServerInfo;
+
+import es.dmoral.toasty.Toasty;
 
 public class SettingsFragment extends PreferenceFragment {
 
@@ -22,8 +23,7 @@ public class SettingsFragment extends PreferenceFragment {
             @Override
             public boolean onPreferenceChange(Preference preference, Object newValue) {
 
-                ServerInfo.ADDRESS = PreferenceManager.getDefaultSharedPreferences(getContext())
-                        .getString("ip_server", ServerInfo.ADDRESS);
+                ServerInfo.ADDRESS = newValue.toString();
 
                 return true;
             }

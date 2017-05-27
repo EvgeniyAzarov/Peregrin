@@ -4,10 +4,12 @@ import android.app.ProgressDialog;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.Editable;
@@ -61,6 +63,9 @@ public class MainActivity extends AppCompatActivity {
         setSupportActionBar((Toolbar) findViewById(R.id.toolbar));
 
         MainActivity.this.startService(new Intent(MainActivity.this, Receiver.class));
+
+        ServerInfo.ADDRESS = PreferenceManager
+                .getDefaultSharedPreferences(this).getString("ip_server", ServerInfo.ADDRESS);
 
         db = new DBHelper(MainActivity.this).getWritableDatabase();
 
