@@ -81,11 +81,13 @@ public class Receiver extends Service {
                             sendBroadcast(intent);
                         } else {
 
+                            String last_interlocutor_login = messages.get(messages.size()-1).get("sender_login");
+
                             Context context = getApplicationContext();
 
                             Intent notificationIntent = new Intent(context, ChatActivity.class);
                             notificationIntent.putExtra("interlocutor_login",
-                                    messages.get(messages.size()-1).get("sender_login"));
+                                    last_interlocutor_login);
 
                             PendingIntent contentIntent = PendingIntent.getActivity(context,
                                     0, notificationIntent,
@@ -99,7 +101,8 @@ public class Receiver extends Service {
                                     .setLargeIcon(BitmapFactory.decodeResource(res, R.mipmap.ic_launcher))
                                     .setWhen(System.currentTimeMillis())
                                     .setAutoCancel(true)
-                                    .setContentTitle(messages.get(messages.size() - 1).get("sender_login"))
+                                    // TODO switch login to nickname
+                                    .setContentTitle(last_interlocutor_login)
                                     .setContentText(messages.get(messages.size() - 1).get("content"));
 
                             Notification notification = builder.build();

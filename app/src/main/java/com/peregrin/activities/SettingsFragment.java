@@ -25,6 +25,8 @@ public class SettingsFragment extends PreferenceFragment {
 
                 ServerInfo.ADDRESS = newValue.toString();
 
+                Toasty.info(getContext(), "Адрес сервера изменён").show();
+
                 return true;
             }
         });
