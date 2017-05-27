@@ -48,6 +48,7 @@ public class ChatActivity extends AppCompatActivity {
 
     private String interlocutorLogin;
     String sender;
+    String interlocutorNickname;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,6 +58,11 @@ public class ChatActivity extends AppCompatActivity {
 
         interlocutorLogin = getIntent().getStringExtra("interlocutor_login");
         sender = getSharedPreferences("user", MODE_PRIVATE).getString("phone", "");
+        interlocutorNickname = getIntent().getStringExtra("interlocutor_nickname");
+
+        Toolbar tb = (Toolbar) findViewById(R.id.toolbar);
+        tb.setTitle(interlocutorNickname);
+        tb.setLogo(R.drawable.ic_user);
 
         btCycle = (ImageButton) findViewById(R.id.btCycling);
         btSend = (ImageButton) findViewById(R.id.btSend);

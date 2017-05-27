@@ -82,11 +82,12 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 String login = ((TextView) view.findViewById(R.id.twPhone)).getText().toString();
+                String nickname = ((TextView) view.findViewById(R.id.twNickname)).getText().toString();
 
                 MainActivity.this.startActivity(
                         new Intent(
                                 MainActivity.this, ChatActivity.class
-                        ).putExtra("interlocutor_login", login)
+                        ).putExtra("interlocutor_login", login).putExtra("interlocutor_nickname", nickname)
                 );
             }
         });
