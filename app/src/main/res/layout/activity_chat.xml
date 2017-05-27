@@ -71,7 +71,8 @@
                 android:layout_width="60dp"
                 android:layout_height="33dp"
                 android:src="@drawable/ic_send_button"
-                android:background="@drawable/button_send_background"/>
+                android:background="@drawable/button_send_background"
+                android:hapticFeedbackEnabled="true" />
         </LinearLayout>
     </LinearLayout>
 

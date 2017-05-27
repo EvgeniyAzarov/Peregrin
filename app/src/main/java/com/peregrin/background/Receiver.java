@@ -30,7 +30,6 @@ import java.util.HashMap;
 public class Receiver extends Service {
 
     private static final int NOTIFY_ID = 867549;
-    private boolean ChatState;
 
     @Nullable
     @Override
@@ -87,9 +86,8 @@ public class Receiver extends Service {
                             Context context = getApplicationContext();
 
                             Intent notificationIntent = new Intent(context, ChatActivity.class);
-                            PendingIntent contentIntent = PendingIntent.getService(context,
-                                    0, notificationIntent,
-                                    PendingIntent.FLAG_CANCEL_CURRENT);
+                            PendingIntent contentIntent = PendingIntent.getService(Receiver.this,
+                                    0, notificationIntent, 0);
 
                             Resources res = context.getResources();
                             Notification.Builder builder = new Notification.Builder(context);

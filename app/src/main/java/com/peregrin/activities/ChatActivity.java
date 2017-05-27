@@ -9,9 +9,9 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.Vibrator;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.view.HapticFeedbackConstants;
 import android.view.View;
 import android.widget.AbsListView;
 import android.widget.EditText;
@@ -35,9 +35,14 @@ public class ChatActivity extends AppCompatActivity {
     private DBHelper dbHelper;
     private SQLiteDatabase db;
 
+    private ImageButton btCycle;
+    private ImageButton btSend;
+
     private MessageEntryAdapter adapter;
     private ListView messagesList;
     private ArrayList<HashMap<String, String>> messages;
+
+    private BroadcastReceiver broadcastReceiver;
 
     public final static String ACTION_UPDATE_CHAT = "UpdateChat";
 
@@ -53,7 +58,8 @@ public class ChatActivity extends AppCompatActivity {
         interlocutorLogin = getIntent().getStringExtra("interlocutor_login");
         sender = getSharedPreferences("user", MODE_PRIVATE).getString("phone", "");
 
-        final ImageButton btCycle = (ImageButton) findViewById(R.id.btCycling);
+        btCycle = (ImageButton) findViewById(R.id.btCycling);
+        btSend = (ImageButton) findViewById(R.id.btSend);
 
         dbHelper = new DBHelper(this);
         db = dbHelper.getWritableDatabase();
@@ -65,13 +71,13 @@ public class ChatActivity extends AppCompatActivity {
         messagesList = (ListView) findViewById(R.id.messages_list);
         messagesList.setAdapter(adapter);
 
-        findViewById(R.id.btCycling).setOnClickListener(new View.OnClickListener() {
+        btCycle.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 messagesList.post(new Runnable() {
                     @Override
                     public void run() {
-                        int position = messagesList.getCount()-1;
+                        int position = messagesList.getCount() - 1;
                         messagesList.setSelection(position);
                         View v = messagesList.getChildAt(position);
                         if (v != null) {
@@ -89,16 +95,15 @@ public class ChatActivity extends AppCompatActivity {
 
             public void onScroll(AbsListView view, int firstVisibleItem,
                                  int visibleItemCount, int totalItemCount) {
-                if(totalItemCount-firstVisibleItem-visibleItemCount>=3){
+                if (totalItemCount - firstVisibleItem - visibleItemCount >= 3) {
                     btCycle.setVisibility(View.VISIBLE);
-                }
-                else{
+                } else {
                     btCycle.setVisibility(View.GONE);
                 }
             }
         });
 
-        findViewById(R.id.btSend).setOnClickListener(new View.OnClickListener() {
+        btSend.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 new AsyncTask<Void, Void, Void>() {
@@ -109,13 +114,13 @@ public class ChatActivity extends AppCompatActivity {
 
                     @Override
                     protected void onPreExecute() {
-                        Vibrator vibrator = (Vibrator)getSystemService(Context.VIBRATOR_SERVICE);
-                        vibrator.vibrate(100);
-                        
+                        btSend.performHapticFeedback(HapticFeedbackConstants.CONTEXT_CLICK,
+                                HapticFeedbackConstants.FLAG_IGNORE_GLOBAL_SETTING);
+
                         EditText etMessage = (EditText) findViewById(R.id.etMessage);
                         content = etMessage.getText().toString();
                         etMessage.setText("");
-                        if(content.equals("")){
+                        if (content.equals("")) {
                             messageCorrect = false;
                         }
                     }
@@ -123,7 +128,7 @@ public class ChatActivity extends AppCompatActivity {
                     @Override
                     protected Void doInBackground(Void... params) {
 
-                        if(messageCorrect) {
+                        if (messageCorrect) {
                             try (
                                     Socket socket = new Socket(ServerInfo.ADDRESS, ServerInfo.PORT);
                                     ObjectOutputStream outputStream = new ObjectOutputStream(socket.getOutputStream());
@@ -163,17 +168,17 @@ public class ChatActivity extends AppCompatActivity {
             }
         });
 
-        BroadcastReceiver br = new BroadcastReceiver() {
+        broadcastReceiver = new BroadcastReceiver() {
             public void onReceive(Context context, Intent intent) {
                 boolean received = intent.getBooleanExtra("received", false);
-                if(received){
+                if (received) {
                     updateChat();
                 }
             }
         };
 
         IntentFilter intFilt = new IntentFilter(ACTION_UPDATE_CHAT);
-        registerReceiver(br, intFilt);
+        registerReceiver(broadcastReceiver, intFilt);
     }
 
     private void updateChat() {
@@ -227,7 +232,7 @@ public class ChatActivity extends AppCompatActivity {
                 messagesList.post(new Runnable() {
                     @Override
                     public void run() {
-                        int position = messagesList.getCount()-1;
+                        int position = messagesList.getCount() - 1;
                         messagesList.setSelection(position);
                         View v = messagesList.getChildAt(position);
                         if (v != null) {
@@ -247,13 +252,15 @@ public class ChatActivity extends AppCompatActivity {
     }
 
 
-    // It's a big crutch!!!!! need to do normal
-    //    @Override
-//    protected void onDestroy() {
+    @Override
+    protected void onDestroy() {
+//        // It's a big crutch!!!!! need to do normal
 //        db.close();
 //        dbHelper.close();
-//
-//        super.onDestroy();
-//    }
+
+        unregisterReceiver(broadcastReceiver);
+
+        super.onDestroy();
+    }
 }
 
