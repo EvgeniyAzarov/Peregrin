@@ -53,6 +53,9 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        ServerInfo.ADDRESS = PreferenceManager
+                .getDefaultSharedPreferences(this).getString("ip_server", ServerInfo.ADDRESS);
+
         if (getSharedPreferences("user", MODE_PRIVATE).getString("phone", "").equals("")) {
             this.startActivity(new Intent(MainActivity.this, SwitchActivity.class));
             this.finish();
@@ -63,9 +66,6 @@ public class MainActivity extends AppCompatActivity {
         setSupportActionBar((Toolbar) findViewById(R.id.toolbar));
 
         MainActivity.this.startService(new Intent(MainActivity.this, Receiver.class));
-
-        ServerInfo.ADDRESS = PreferenceManager
-                .getDefaultSharedPreferences(this).getString("ip_server", ServerInfo.ADDRESS);
 
         db = new DBHelper(MainActivity.this).getWritableDatabase();
 
@@ -239,7 +239,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_main, menu);
-        return true;
+        return super.onCreateOptionsMenu(menu);
     }
 
     @Override
