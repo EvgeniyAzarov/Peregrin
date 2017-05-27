@@ -30,6 +30,8 @@
             android:screenOrientation="portrait"/>
         <activity android:name=".activities.AboutActivity"
             android:screenOrientation="portrait" />
+        <activity android:name=".activities.SettingsActivity"
+            android:screenOrientation="portrait" />
         <service android:name=".background.Receiver" />
     </application>
 
