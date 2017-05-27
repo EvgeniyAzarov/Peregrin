@@ -4,12 +4,10 @@ import android.app.ProgressDialog;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.Editable;
@@ -67,7 +65,7 @@ public class MainActivity extends AppCompatActivity {
         db = new DBHelper(MainActivity.this).getWritableDatabase();
 
         adapter = new SimpleAdapter(MainActivity.this, chats,
-                R.layout.chat_entry,
+                R.layout.chat_entry_layout,
                 new String[]{"nickname", "phone"},
                 new int[]{R.id.twNickname, R.id.twPhone});
         updateChatsList();

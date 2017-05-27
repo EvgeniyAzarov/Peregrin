@@ -64,7 +64,7 @@ public class Receiver extends Service {
 
                         ArrayList<HashMap<String, String>> messages
                                 = (ArrayList<HashMap<String, String>>) inputStream.readObject();
-                        outputStream.writeBoolean(true);
+
                         ContentValues cv = new ContentValues();
 
                         for (int i = 0; i < messages.size(); i++) {
@@ -73,9 +73,6 @@ public class Receiver extends Service {
                             cv.put("content", messages.get(i).get("content"));
                             db.insert("messages", null, cv);
                         }
-
-                        outputStream.writeBoolean(true);
-
 
                         if (((ActivityStatusListener) getApplicationContext())
                                 .isChatActivityForeground()) {
