@@ -8,6 +8,7 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.Resources;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.BitmapFactory;
 import android.os.IBinder;
@@ -29,8 +30,6 @@ import java.util.HashMap;
 
 
 public class Receiver extends Service {
-
-    private static final int NOTIFY_ID = 867549;
 
     private DBHelper dbHelper;
     private SQLiteDatabase db;
@@ -74,49 +73,82 @@ public class Receiver extends Service {
                         ContentValues cv = new ContentValues();
 
                         for (int i = 0; i < messages.size(); i++) {
-                            cv.put("sender_login", messages.get(i).get("sender_login"));
-                            cv.put("recipient_login", messages.get(i).get("recipient_login"));
-                            cv.put("content", messages.get(i).get("content"));
+                            String login = messages.get(i).get("sender_login");
+                            String content = messages.get(i).get("content");
+
+                            cv.put("sender_login", login);
+                            cv.put("recipient_login", recipient);
+                            cv.put("content", content);
                             db.insert("messages", null, cv);
-                        }
 
-                        if (((ActivityStatusListener) getApplicationContext())
-                                .isChatActivityForeground()) {
-                            Intent intent = new Intent(ChatActivity.ACTION_UPDATE_CHAT);
-                            intent.putExtra("received", true);
-                            sendBroadcast(intent);
-                        } else {
 
-                            String last_interlocutor_login = messages.get(messages.size() - 1).get("sender_login");
+                            Cursor cursor = db.query("chats_list", null, "interlocutor_login = ?",
+                                    new String[]{login}, null, null, null, null);
 
-                            Context context = getApplicationContext();
+                            if (!cursor.moveToFirst()) {
 
-                            Intent notificationIntent = new Intent(context, ChatActivity.class);
-                            notificationIntent.putExtra("interlocutor_login",
-                                    last_interlocutor_login);
+                                String[] AddRequest = new String[3];
+                                AddRequest[0] = "FIND_USER";
+                                AddRequest[1] = login;
+                                AddRequest[2] = getSharedPreferences("user", MODE_PRIVATE).getString("phone", "");
 
-                            PendingIntent contentIntent = PendingIntent.getActivity(context,
-                                    0, notificationIntent,
-                                    PendingIntent.FLAG_CANCEL_CURRENT);
+                                outputStream.writeObject(AddRequest);
 
-                            Resources res = context.getResources();
-                            Notification.Builder builder = new Notification.Builder(context);
+                                if (inputStream.readBoolean()) {
+                                    String interlocutor_nickname = (String) inputStream.readObject();
 
-                            builder.setContentIntent(contentIntent)
-                                    .setSmallIcon(R.mipmap.ic_launcher)
-                                    .setLargeIcon(BitmapFactory.decodeResource(res, R.mipmap.ic_launcher))
-                                    .setWhen(System.currentTimeMillis())
-                                    .setAutoCancel(true)
-                                    // TODO switch login to nickname
-                                    .setContentTitle(last_interlocutor_login)
-                                    .setContentText(messages.get(messages.size() - 1).get("content"));
+                                    ContentValues cvAdd = new ContentValues();
+                                    cvAdd.put("interlocutor_login", login);
+                                    cvAdd.put("interlocutor_nickname", interlocutor_nickname);
 
-                            Notification notification = builder.build();
-                            notification.defaults = Notification.DEFAULT_ALL;
+                                    db.insert("chats_list", null, cv);
 
-                            NotificationManager notificationManager = (NotificationManager) context
-                                    .getSystemService(Context.NOTIFICATION_SERVICE);
-                            notificationManager.notify(NOTIFY_ID, notification);
+                                    Intent intent = new Intent(MainActivity.ACTION_UPDATE_CHATS_LIST);
+                                    intent.putExtra("received", true);
+                                    sendBroadcast(intent);
+                                }
+                            }
+
+                            String nickname = cursor.getString(cursor.getColumnIndex("interlocutor_nickname"));
+                            int id = cursor.getInt(cursor.getColumnIndex("id"));
+
+                            cursor.close();
+
+                            if (((ActivityStatusListener) getApplicationContext())
+                                    .isChatActivityForeground() &&
+                                    ChatActivity.getInterlocutorLogin().equals(login)) {
+                                Intent intent = new Intent(ChatActivity.ACTION_UPDATE_CHAT);
+                                intent.putExtra("received", true);
+                                sendBroadcast(intent);
+                            } else {
+                                Context context = getApplicationContext();
+
+                                Intent notificationIntent = new Intent(context, ChatActivity.class);
+                                notificationIntent.putExtra("interlocutor_login", login);
+                                notificationIntent.putExtra("interlocutor_nickname", nickname);
+
+                                PendingIntent contentIntent = PendingIntent.getActivity(context,
+                                        0, notificationIntent,
+                                        PendingIntent.FLAG_CANCEL_CURRENT);
+
+                                Resources res = context.getResources();
+                                Notification.Builder builder = new Notification.Builder(context);
+
+                                builder.setContentIntent(contentIntent)
+                                        .setSmallIcon(R.mipmap.ic_launcher)
+                                        .setLargeIcon(BitmapFactory.decodeResource(res, R.mipmap.ic_launcher))
+                                        .setWhen(System.currentTimeMillis())
+                                        .setAutoCancel(true)
+                                        .setContentTitle(nickname)
+                                        .setContentText(content);
+
+                                Notification notification = builder.build();
+                                notification.defaults = Notification.DEFAULT_ALL;
+
+                                NotificationManager notificationManager = (NotificationManager) context
+                                        .getSystemService(Context.NOTIFICATION_SERVICE);
+                                notificationManager.notify(id, notification);
+                            }
                         }
 
                     } catch (IOException | ClassNotFoundException e) {

@@ -46,9 +46,13 @@ public class ChatActivity extends AppCompatActivity {
 
     public final static String ACTION_UPDATE_CHAT = "UpdateChat";
 
-    private String interlocutorLogin;
-    String sender;
-    String interlocutorNickname;
+    private static String interlocutorLogin;
+    private String sender;
+    private String interlocutorNickname;
+
+    public static String getInterlocutorLogin() {
+        return interlocutorLogin;
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

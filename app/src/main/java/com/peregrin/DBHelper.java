@@ -13,6 +13,7 @@ public class DBHelper extends SQLiteOpenHelper {
     @Override
     public void onCreate(SQLiteDatabase db) {
         db.execSQL("create table chats_list ("
+                + "id integer primary key autoincrement,"
                 + "interlocutor_login text,"
                 + "interlocutor_nickname text);");
 

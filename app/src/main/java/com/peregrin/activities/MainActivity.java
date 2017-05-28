@@ -1,10 +1,11 @@
 package com.peregrin.activities;
 
 import android.app.ProgressDialog;
+import android.content.BroadcastReceiver;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
+import android.content.IntentFilter;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.AsyncTask;
@@ -50,6 +51,10 @@ public class MainActivity extends AppCompatActivity {
     private View.OnClickListener buttonNormal;
 
     private SQLiteDatabase db;
+
+    private BroadcastReceiver broadcastReceiver;
+
+    public final static String ACTION_UPDATE_CHATS_LIST = "UpdateChatsList";
 
     @Override
     protected void onStart() {
@@ -240,6 +245,27 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         });
+
+        broadcastReceiver = new BroadcastReceiver() {
+            public void onReceive(Context context, Intent intent) {
+                boolean received = intent.getBooleanExtra("received", false);
+                if (received) {
+                    updateChatsList();
+                    adapter.notifyDataSetChanged();
+                }
+            }
+        };
+
+        IntentFilter intFilt = new IntentFilter(ACTION_UPDATE_CHATS_LIST);
+        registerReceiver(broadcastReceiver, intFilt);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        updateChatsList();
+        adapter.notifyDataSetChanged();
     }
 
     @Override
@@ -278,7 +304,9 @@ public class MainActivity extends AppCompatActivity {
     protected void onDestroy() {
         super.onDestroy();
 
-        db.close();
+        unregisterReceiver(broadcastReceiver);
+
+//        db.close();
     }
 
     private void updateChatsList() {
