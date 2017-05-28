@@ -32,6 +32,11 @@ public class Receiver extends Service {
 
     private static final int NOTIFY_ID = 867549;
 
+    private DBHelper dbHelper;
+    private SQLiteDatabase db;
+
+    private Thread receiveThread;
+
     @Nullable
     @Override
     public IBinder onBind(Intent intent) {
@@ -39,15 +44,16 @@ public class Receiver extends Service {
     }
 
     @Override
-    public int onStartCommand(Intent intent, int flags, int startId) {
+    public void onCreate() {
+        super.onCreate();
 
-        final DBHelper dbHelper = new DBHelper(this);
+        dbHelper = new DBHelper(this);
 
-        new Thread(new Runnable() {
+        db = dbHelper.getWritableDatabase();
+
+        receiveThread = new Thread(new Runnable() {
             @Override
             public void run() {
-                SQLiteDatabase db = dbHelper.getWritableDatabase();
-
                 String recipient = getSharedPreferences("user", MODE_PRIVATE).getString("phone", null);
 
                 while (!Thread.currentThread().isInterrupted()) {
@@ -81,7 +87,7 @@ public class Receiver extends Service {
                             sendBroadcast(intent);
                         } else {
 
-                            String last_interlocutor_login = messages.get(messages.size()-1).get("sender_login");
+                            String last_interlocutor_login = messages.get(messages.size() - 1).get("sender_login");
 
                             Context context = getApplicationContext();
 
@@ -117,12 +123,16 @@ public class Receiver extends Service {
                         Log.d("peregrin", e.getMessage());
                     }
                 }
-
-                db.close();
             }
-        }).start();
-        dbHelper.close();
+        });
+    }
 
+    @Override
+    public int onStartCommand(Intent intent, int flags, int startId) {
+
+        if (!receiveThread.isAlive()) {
+            receiveThread.start();
+        }
 
         return super.onStartCommand(intent, flags, startId);
     }
