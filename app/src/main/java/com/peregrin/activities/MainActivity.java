@@ -52,6 +52,13 @@ public class MainActivity extends AppCompatActivity {
     private SQLiteDatabase db;
 
     @Override
+    protected void onStart() {
+        super.onStart();
+
+        MainActivity.this.startService(new Intent(MainActivity.this, Receiver.class));
+    }
+
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         ServerInfo.ADDRESS = PreferenceManager
                 .getDefaultSharedPreferences(this).getString("ip_server", ServerInfo.ADDRESS);
@@ -64,8 +71,6 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         setSupportActionBar((Toolbar) findViewById(R.id.toolbar));
-
-        MainActivity.this.startService(new Intent(MainActivity.this, Receiver.class));
 
         db = new DBHelper(MainActivity.this).getWritableDatabase();
 
@@ -140,6 +145,7 @@ public class MainActivity extends AppCompatActivity {
                                 String[] request = new String[3];
                                 request[0] = "FIND_USER";
                                 request[1] = interlocutor_login;
+                                request[2] = getSharedPreferences("user", MODE_PRIVATE).getString("phone", "");
 
                                 outputStream.writeObject(request);
 
@@ -249,6 +255,7 @@ public class MainActivity extends AppCompatActivity {
                 getSharedPreferences("user", MODE_PRIVATE).edit().clear().apply();
                 db.delete("chats_list", null, null);
                 db.delete("messages", null, null);
+                Receiver.stopThread();
                 startActivity(new Intent(MainActivity.this, SwitchActivity.class)
                         .setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK)
                 );

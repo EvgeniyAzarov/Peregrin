@@ -35,7 +35,7 @@ public class Receiver extends Service {
     private DBHelper dbHelper;
     private SQLiteDatabase db;
 
-    private Thread receiveThread;
+    private static Thread receiveThread;
 
     @Nullable
     @Override
@@ -135,5 +135,9 @@ public class Receiver extends Service {
         }
 
         return super.onStartCommand(intent, flags, startId);
+    }
+
+    public static void stopThread() {
+        receiveThread.interrupt();
     }
 }
