@@ -72,6 +72,11 @@ class MessageEntryAdapter extends BaseAdapter {
             tvUserMessage.setVisibility(View.GONE);
         }
 
+        if (messages.get(position).get("content").equals("2e9e44dc-f731-4cba-b561-8bdd4c7990fc")) {
+            tvInterlocutorMessage.setVisibility(View.GONE);
+            tvUserMessage.setVisibility(View.GONE);
+        }
+
         return view;
     }
 }
