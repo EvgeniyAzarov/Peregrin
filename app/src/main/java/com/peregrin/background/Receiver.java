@@ -56,6 +56,8 @@ public class Receiver extends Service {
                 String recipient = getSharedPreferences("user", MODE_PRIVATE).getString("phone", null);
 
                 while (!Thread.currentThread().isInterrupted()) {
+                    ArrayList<HashMap<String, String>> messages = new ArrayList<>();
+
                     try (
                             Socket socket = new Socket(ServerInfo.ADDRESS, ServerInfo.PORT);
                             ObjectOutputStream outputStream = new ObjectOutputStream(socket.getOutputStream());
@@ -67,32 +69,43 @@ public class Receiver extends Service {
 
                         outputStream.writeObject(request);
 
-                        ArrayList<HashMap<String, String>> messages
-                                = (ArrayList<HashMap<String, String>>) inputStream.readObject();
+                        messages = (ArrayList<HashMap<String, String>>) inputStream.readObject();
+                    } catch (IOException | ClassNotFoundException e) {
+                        Log.e("peregrin", e.getMessage());
+                    }
 
-                        ContentValues cv = new ContentValues();
+                    ContentValues cv = new ContentValues();
 
-                        for (int i = 0; i < messages.size(); i++) {
-                            String login = messages.get(i).get("sender_login");
-                            String content = messages.get(i).get("content");
+                    for (int i = 0; i < messages.size(); i++) {
+                        String login = messages.get(i).get("sender_login");
+                        String content = messages.get(i).get("content");
 
-                            cv.put("sender_login", login);
-                            cv.put("recipient_login", recipient);
-                            cv.put("content", content);
-                            db.insert("messages", null, cv);
+                        cv.put("sender_login", login);
+                        cv.put("recipient_login", recipient);
+                        cv.put("content", content);
+                        db.insert("messages", null, cv);
 
+                        Cursor cursor = db.query("chats_list",
+                                new String[]{"id", "interlocutor_nickname"},
+                                "interlocutor_login = ?",
+                                new String[]{login}, null, null, null, null);
 
-                            Cursor cursor = db.query("chats_list", null, "interlocutor_login = ?",
-                                    new String[]{login}, null, null, null, null);
+                        String nickname = null;
+                        int id = 0;
 
-                            if (!cursor.moveToFirst()) {
+                        if (!cursor.moveToFirst()) {
 
-                                String[] AddRequest = new String[3];
-                                AddRequest[0] = "FIND_USER";
-                                AddRequest[1] = login;
-                                AddRequest[2] = getSharedPreferences("user", MODE_PRIVATE).getString("phone", "");
+                            try (
+                                    Socket socket = new Socket(ServerInfo.ADDRESS, ServerInfo.PORT);
+                                    ObjectOutputStream outputStream = new ObjectOutputStream(socket.getOutputStream());
+                                    ObjectInputStream inputStream = new ObjectInputStream(socket.getInputStream())
+                            ) {
+                                String[] addRequest = new String[3];
+                                addRequest[0] = "FIND_USER";
+                                addRequest[1] = login;
+                                addRequest[2] = getSharedPreferences("user", MODE_PRIVATE).getString("phone", "");
 
-                                outputStream.writeObject(AddRequest);
+                                outputStream.writeObject(addRequest);
 
                                 if (inputStream.readBoolean()) {
                                     String interlocutor_nickname = (String) inputStream.readObject();
@@ -101,26 +114,32 @@ public class Receiver extends Service {
                                     cvAdd.put("interlocutor_login", login);
                                     cvAdd.put("interlocutor_nickname", interlocutor_nickname);
 
-                                    db.insert("chats_list", null, cv);
+                                    id = (int) db.insert("chats_list", null, cvAdd);
 
                                     Intent intent = new Intent(MainActivity.ACTION_UPDATE_CHATS_LIST);
                                     intent.putExtra("received", true);
                                     sendBroadcast(intent);
+
+                                    nickname = interlocutor_nickname;
                                 }
+                            } catch (IOException | ClassNotFoundException e) {
+                                Log.e("peregrin", e.getMessage());
                             }
+                        } else {
+                            nickname = cursor.getString(cursor.getColumnIndex("interlocutor_nickname"));
+                            id = cursor.getInt(cursor.getColumnIndex("id"));
+                        }
 
-                            String nickname = cursor.getString(cursor.getColumnIndex("interlocutor_nickname"));
-                            int id = cursor.getInt(cursor.getColumnIndex("id"));
+                        cursor.close();
 
-                            cursor.close();
-
-                            if (((ActivityStatusListener) getApplicationContext())
-                                    .isChatActivityForeground() &&
-                                    ChatActivity.getInterlocutorLogin().equals(login)) {
-                                Intent intent = new Intent(ChatActivity.ACTION_UPDATE_CHAT);
-                                intent.putExtra("received", true);
-                                sendBroadcast(intent);
-                            } else {
+                        if (((ActivityStatusListener) getApplicationContext())
+                                .isChatActivityForeground() &&
+                                ChatActivity.getInterlocutorLogin().equals(login)) {
+                            Intent intent = new Intent(ChatActivity.ACTION_UPDATE_CHAT);
+                            intent.putExtra("received", true);
+                            sendBroadcast(intent);
+                        } else {
+                            if (!content.equals("2e9e44dc-f731-4cba-b561-8bdd4c7990fc")) {
                                 Context context = getApplicationContext();
 
                                 Intent notificationIntent = new Intent(context, ChatActivity.class);
@@ -150,9 +169,6 @@ public class Receiver extends Service {
                                 notificationManager.notify(id, notification);
                             }
                         }
-
-                    } catch (IOException | ClassNotFoundException e) {
-                        Log.d("peregrin", e.getMessage());
                     }
                 }
             }
@@ -171,5 +187,6 @@ public class Receiver extends Service {
 
     public static void stopThread() {
         receiveThread.interrupt();
+        Log.i("peregrin", "interrupt receive thread");
     }
 }
