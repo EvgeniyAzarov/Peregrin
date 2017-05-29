@@ -1,46 +1,79 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
     tools:context="com.peregrin.activities.ChatActivity">
 
+    <include
+        android:id="@+id/toolbar"
+        layout="@layout/toolbar" />
+
     <LinearLayout
-        android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:gravity="bottom">
+        android:gravity="bottom"
+        android:orientation="vertical">
 
-        <ListView
+        <FrameLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/messages_list"
-            android:layout_weight="20"
-            android:dividerHeight="0dp"
-            android:divider="@null"/>
+            android:layout_height="match_parent"
+            android:layout_weight="100">
+
+            <ListView
+                android:id="@+id/messages_list"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:divider="@null"
+                android:dividerHeight="0dp" />
+
+
+            <ImageButton
+                android:id="@+id/btCycling"
+                android:layout_width="50dp"
+                android:layout_height="33dp"
+                android:layout_marginEnd="10dp"
+                android:layout_marginBottom="10dp"
+                android:layout_gravity="bottom|end"
+                android:gravity="center"
+                android:background="@drawable/button_cycling_background"
+                android:src="@drawable/ic_cycling_button"
+                android:tint="#FF808080"
+                android:visibility="visible" />
+
+
+        </FrameLayout>
 
         <LinearLayout
-            android:orientation="horizontal"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="1">
+            android:layout_marginBottom="5dp"
+            android:layout_marginEnd="3dp"
+            android:layout_marginStart="3dp"
+            android:layout_marginTop="5dp"
+            android:layout_weight="1"
+            android:orientation="horizontal">
 
             <EditText
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:inputType="textMultiLine"
-                android:ems="10"
                 android:id="@+id/etMessage"
-                android:layout_weight="5" />
-
-            <Button
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="->"
-                android:id="@+id/btEnter"
-                android:layout_weight="1" />
+                android:layout_gravity="center_vertical"
+                android:layout_weight="1"
+                android:ems="10"
+                android:inputType="textMultiLine" />
+
+            <ImageButton
+                android:id="@+id/btSend"
+                android:layout_gravity="center_vertical"
+                android:layout_marginEnd="3dp"
+                android:layout_width="60dp"
+                android:layout_height="33dp"
+                android:src="@drawable/ic_send_button"
+                android:background="@drawable/button_send_background"
+                android:hapticFeedbackEnabled="true" />
         </LinearLayout>
     </LinearLayout>
 
-</android.support.constraint.ConstraintLayout>
+</LinearLayout>
